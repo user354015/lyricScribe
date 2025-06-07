@@ -1,6 +1,9 @@
 package main
 
-import "fmt"
+import (
+	"errors"
+	"fmt"
+)
 
 var testSong Song = Song{
 	"Stained, Brutal Calamity",
@@ -10,6 +13,12 @@ var testSong Song = Song{
 	733363645}
 
 func main() {
-	lyrics := DownloadLyrics(testSong)
-	fmt.Println(lyrics[0])
+	// lyrics := DownloadLyrics(testSong)
+	player := GetPlayer(PreferedPlayer)
+	if player == "none" {
+		Check(errors.New(MsgNoActivePlayer))
+	}
+	playerInfo := GetPlayerInfo(player)
+	fmt.Println(playerInfo)
+
 }

@@ -25,6 +25,7 @@ type Request struct {
 }
 
 var (
-	MsgSongNotFound = []Lyric{{"Song not found", 0}}
-	MsgNoLiveLyrics = []Lyric{{"No live lyrics found", 0}}
+	MsgSongNotFound   = []Lyric{{"Song not found", 0}}
+	MsgNoLiveLyrics   = []Lyric{{"No live lyrics found", 0}}
+	MsgNoActivePlayer = "No MPRIS-compatible players active"
 )
