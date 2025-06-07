@@ -1,10 +1,8 @@
 package main
 
 import (
-	"strings"
-	"time"
-
 	"github.com/godbus/dbus/v5"
+	"strings"
 )
 
 func getActivePlayers() []string {
@@ -46,13 +44,29 @@ func GetPlayerInfo(name string) Song {
 
 	player := conn.Object(name, dbus.ObjectPath(PlayerPath))
 	var metadata map[string]dbus.Variant
-	e = player.Call("org.freedesktop.DBus.Properties.Get", 0, "org.mpris.MediaPlayer2.Player", "Metadata").Store(&metadata)
+	e = player.Call("org.freedesktop.DBus.Properties.Get", 0,
+		"org.mpris.MediaPlayer2.Player", "Metadata").Store(&metadata)
 	Check(e)
 
 	playerInfo.Album = metadata["xesam:album"].Value().(string)
 	playerInfo.Artist = metadata["xesam:artist"].Value().([]string)[0]
 	playerInfo.Name = metadata["xesam:title"].Value().(string)
-	playerInfo.Length = int(metadata["mpris:length"].Value().(int64) * int64(time.Millisecond))
+	playerInfo.Length = int(metadata["mpris:length"].Value().(int64))
 
 	return playerInfo
+}
+
+func GetPlayerPosition(name string) int {
+	conn, e := dbus.ConnectSessionBus()
+	Check(e)
+	defer conn.Close()
+
+	player := conn.Object(name, dbus.ObjectPath(PlayerPath))
+
+	var position int
+	e = player.Call("org.freedesktop.DBus.Properties.Get", 0,
+		"org.mpris.MediaPlayer2.Player", "Position").Store(&position)
+	Check(e)
+
+	return position
 }

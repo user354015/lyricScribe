@@ -7,7 +7,6 @@ import (
 	"net/url"
 	"strconv"
 	"strings"
-	"time"
 )
 
 func DownloadLyrics(track Song) []Lyric {
@@ -51,9 +50,9 @@ func parseLyrics(request string) []Lyric {
 
 		var position float64
 		timestamp := strings.Split(sepLyric[0], "[")[1]
-		position = ConvertTimestampToSeconds(timestamp)
+		position = ConvertTimestampToSeconds(timestamp) * 1_000_000
 
-		lyric = Lyric{sepLyric[1], int(position * float64(time.Millisecond))}
+		lyric = Lyric{sepLyric[1], int(position)}
 		parsedLyrics = append(parsedLyrics, lyric)
 	}
 
