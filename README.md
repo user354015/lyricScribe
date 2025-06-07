@@ -1,5 +1,5 @@
 ## What?
-A simple python script that downloads, checks and displays the synced lyrics for the song currently playing using MPRIS.
+A simple Go script that downloads, checks and displays the synced lyrics for the song currently playing using MPRIS.
 
 ## Why?
 Nobody else was gonna do it so fuck it, I'm doing it myself.
