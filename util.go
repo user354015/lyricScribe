@@ -40,5 +40,9 @@ func ComparePositions(position int, positions []int) int {
 			break
 		}
 	}
-	return currentIndex
+	if currentIndex <= len(positions) {
+		return currentIndex
+	} else {
+		return 0
+	}
 }

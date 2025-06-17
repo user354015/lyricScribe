@@ -21,6 +21,10 @@ func DownloadLyrics(track Song) []Lyric {
 	defer response.Body.Close()
 
 	if response.StatusCode == 404 {
+		// fmt.Println(url)
+		return MsgSongNotFound
+	}
+	if response.StatusCode != 200 {
 		return MsgSongNotFound
 	}
 
