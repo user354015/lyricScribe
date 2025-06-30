@@ -20,7 +20,7 @@ var positions []int
 func setup() {
 	player = GetPlayer(PreferedPlayer)
 	if player == "none" {
-		Check(errors.New(MsgNoActivePlayer))
+		Check(errors.New(ReturnNoActivePlayer))
 	}
 
 	currentSong = GetPlayerInfo(player)

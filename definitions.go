@@ -25,21 +25,28 @@ type Request struct {
 }
 
 var (
-	MsgSongNotFound []Lyric
-	MsgNoLiveLyrics []Lyric
+	ReturnSongNotFound []Lyric
+	ReturnNoLiveLyrics []Lyric
 
-	MsgNoActivePlayer string
+	ReturnNoActivePlayer string
+)
+
+const (
+	MsgSongNotFound   string = "Song not found"
+	MsgNoLiveLyrics   string = "No live lyrics found"
+	MsgNoActivePlayer string = "No MPRIS-compatible players are active"
 )
 
 func SetLogMessages() {
 	switch LoggingMode {
 	case "silent":
-		MsgSongNotFound = []Lyric{{"", 0}}
-		MsgNoLiveLyrics = []Lyric{{"", 0}}
-		MsgNoActivePlayer = "No MPRIS-compatible players active"
+		ReturnSongNotFound = []Lyric{{"", 0}}
+		ReturnNoLiveLyrics = []Lyric{{"", 0}}
+		ReturnNoActivePlayer = "No MPRIS-compatible players active"
 	case "display":
-		MsgSongNotFound = []Lyric{{"Song not found", 0}}
-		MsgNoLiveLyrics = []Lyric{{"No live lyrics found", 0}}
-		MsgNoActivePlayer = "No MPRIS-compatible players active"
+		ReturnSongNotFound = []Lyric{{"Song not found", 0}}
+		ReturnNoLiveLyrics = []Lyric{{"No live lyrics found", 0}}
+		ReturnNoActivePlayer = "No MPRIS-compatible players active"
 	}
+
 }

@@ -1,6 +1,8 @@
 package main
 
 const (
+	ProgramName string = "LyricScribe"
+
 	ProgramMode string = "display" // Available modes: debug, display
 	LoggingMode string = "silent"  // Available modes: silent, display
 

@@ -22,10 +22,12 @@ func DownloadLyrics(track Song) []Lyric {
 
 	if response.StatusCode == 404 {
 		// fmt.Println(url)
-		return MsgSongNotFound
+		NotifyUser(MsgSongNotFound, MsgSongNotFound)
+		return ReturnSongNotFound
 	}
 	if response.StatusCode != 200 {
-		return MsgSongNotFound
+		NotifyUser(MsgSongNotFound, strings.Join([]string{MsgSongNotFound, ": "}, strconv.Itoa(response.StatusCode)))
+		return ReturnSongNotFound
 	}
 
 	body, e := io.ReadAll(response.Body)
@@ -44,7 +46,8 @@ func parseLyrics(request string) []Lyric {
 	Check(e)
 
 	if decodedLyrics.SyncedLyrics == "" {
-		return MsgNoLiveLyrics
+		NotifyUser(MsgNoLiveLyrics, MsgNoLiveLyrics)
+		return ReturnNoLiveLyrics
 	}
 
 	rawLyrics := strings.Split(decodedLyrics.SyncedLyrics, "\n")
