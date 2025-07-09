@@ -16,6 +16,12 @@ func DownloadLyrics(track Song) []Lyric {
 		"&album_name=" + url.QueryEscape(track.Album) +
 		"&track_duration=" + strconv.Itoa(track.Length)
 
+	lyrics := findLyrics(url)
+
+	return lyrics
+}
+
+func findLyrics(url string) []Lyric {
 	response, e := http.Get(url)
 	Check(e)
 	defer response.Body.Close()
@@ -38,8 +44,11 @@ func DownloadLyrics(track Song) []Lyric {
 	return lyrics
 }
 
+func searchLyrics() {
+}
+
 func parseLyrics(request string) []Lyric {
-	var parsedLyrics []Lyric
+	var parsedLyrics []Lyric = []Lyric{{"", 0}}
 
 	var decodedLyrics Request
 	e := json.Unmarshal([]byte(request), &decodedLyrics)
