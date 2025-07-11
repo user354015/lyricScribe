@@ -6,6 +6,8 @@ const (
 	ProgramMode string = "display" // Available modes: debug, display
 	LoggingMode string = "silent"  // Available modes: silent, display
 
+	FetchMode string = "both" // Available modes: match, search, both
+
 	FetchApiUrl    string = "https://lrclib.net/api/get?"
 	FetchSearchUrl string = "https://lrclib.net/api/search?q="
 
