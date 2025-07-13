@@ -3,6 +3,7 @@ package main
 import (
 	"errors"
 	"fmt"
+	"time"
 )
 
 var testSong Song = Song{
@@ -71,6 +72,8 @@ func main() {
 
 				program.UpdateDisplay(text)
 			}
+
+			time.Sleep(time.Duration(Step * 1_000_000))
 		}
 	}
 }
