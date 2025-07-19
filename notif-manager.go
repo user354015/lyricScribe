@@ -3,11 +3,7 @@ package main
 import "github.com/godbus/dbus/v5"
 
 func NotifyUser(title string, message string) error {
-	conn, err := dbus.SessionBus()
-	Check(err)
-	defer conn.Close()
-
-	obj := conn.Object("org.freedesktop.Notifications", "/org/freedesktop/Notifications")
+	obj := DbusConn.Object("org.freedesktop.Notifications", "/org/freedesktop/Notifications")
 
 	call := obj.Call("org.freedesktop.Notifications.Notify", 0,
 		ProgramName,               // app_name

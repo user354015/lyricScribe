@@ -24,7 +24,7 @@ func setup() {
 		Check(errors.New(ReturnNoActivePlayer))
 	}
 
-	currentSong, _ = GetPlayerInfo(player)
+	currentSong = GetPlayerInfo(player)
 	lyrics = DownloadLyrics(currentSong)
 
 	positions = []int{}
@@ -46,14 +46,18 @@ func main() {
 		defer program.Quit()
 	}
 
+	InitDBusConnection()
+	defer CloseDBusConnection()
+
 	SetLogMessages()
 
 	for true {
 		setup()
 
-		playerInfo, position := GetPlayerInfo(player)
+		playerInfo := GetPlayerInfo(player)
 		for currentSong == playerInfo {
-			playerInfo, position = GetPlayerInfo(player)
+			playerInfo = GetPlayerInfo(player)
+			position := GetPlayerPosition(player)
 			id := ComparePositions(position-int(PositionOffset*1_000_000), positions)
 
 			var text string
@@ -70,11 +74,13 @@ func main() {
 					prevText = text
 				}
 			case "display":
-
 				program.UpdateDisplay(text)
 			}
 
 			time.Sleep(time.Duration(Step * 1_000_000))
 		}
+
+		// Small cooldown to prevent spamming the api
+		time.Sleep(time.Duration(1_500 * 1_000_000))
 	}
 }

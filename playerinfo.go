@@ -6,12 +6,9 @@ import (
 )
 
 func getActivePlayers() []string {
-	conn, e := dbus.ConnectSessionBus()
-	Check(e)
-	defer conn.Close()
 
 	var dbusObjects []string
-	e = conn.BusObject().Call("org.freedesktop.DBus.ListNames", 0).Store(&dbusObjects)
+	e := DbusConn.BusObject().Call("org.freedesktop.DBus.ListNames", 0).Store(&dbusObjects)
 	Check(e)
 
 	var players []string
@@ -35,16 +32,12 @@ func GetPlayer(pref string) string {
 	return "none"
 }
 
-func GetPlayerInfo(name string) (Song, int) {
+func GetPlayerInfo(name string) Song {
 	var playerInfo Song
 
-	conn, e := dbus.ConnectSessionBus()
-	Check(e)
-	defer conn.Close()
-
-	player := conn.Object(name, dbus.ObjectPath(PlayerPath))
+	player := DbusConn.Object(name, dbus.ObjectPath(PlayerPath))
 	var metadata map[string]dbus.Variant
-	e = player.Call("org.freedesktop.DBus.Properties.Get", 0,
+	e := player.Call("org.freedesktop.DBus.Properties.Get", 0,
 		"org.mpris.MediaPlayer2.Player", "Metadata").Store(&metadata)
 	Check(e)
 
@@ -53,10 +46,15 @@ func GetPlayerInfo(name string) (Song, int) {
 	playerInfo.Name = metadata["xesam:title"].Value().(string)
 	playerInfo.Length = int(metadata["mpris:length"].Value().(int64))
 
+	return playerInfo
+}
+
+func GetPlayerPosition(name string) int {
+	player := DbusConn.Object(name, dbus.ObjectPath(PlayerPath))
 	var position int
-	e = player.Call("org.freedesktop.DBus.Properties.Get", 0,
+	e := player.Call("org.freedesktop.DBus.Properties.Get", 0,
 		"org.mpris.MediaPlayer2.Player", "Position").Store(&position)
 	Check(e)
 
-	return playerInfo, position
+	return position
 }
