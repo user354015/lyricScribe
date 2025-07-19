@@ -17,6 +17,6 @@ const (
 	PlayerPath   string = "/org/mpris/MediaPlayer2"
 
 	PositionOffset float64 = -0.52
-	Step           float64 = 0.05
+	Step           float64 = 0.25
 	SilenceTimout  int     = 3
 )

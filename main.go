@@ -6,12 +6,12 @@ import (
 	"time"
 )
 
-var testSong Song = Song{
-	"Stained, Brutal Calamity",
-	// "Threats of the Ocean Floor",
-	"DM DOKURO",
-	"The Tale of a Cruel World (Calamity Original Soundtrack)",
-	733363645}
+// var testSong Song = Song{
+// 	"Stained, Brutal Calamity",
+// 	// "Threats of the Ocean Floor",
+// 	"DM DOKURO",
+// 	"The Tale of a Cruel World (Calamity Original Soundtrack)",
+// 	733363645}
 
 var player string
 var lyrics []Lyric
@@ -24,7 +24,7 @@ func setup() {
 		Check(errors.New(ReturnNoActivePlayer))
 	}
 
-	currentSong = GetPlayerInfo(player)
+	currentSong, _ = GetPlayerInfo(player)
 	lyrics = DownloadLyrics(currentSong)
 
 	positions = []int{}
@@ -51,8 +51,9 @@ func main() {
 	for true {
 		setup()
 
-		for currentSong == GetPlayerInfo(player) {
-			position := GetPlayerPosition(player)
+		playerInfo, position := GetPlayerInfo(player)
+		for currentSong == playerInfo {
+			playerInfo, position = GetPlayerInfo(player)
 			id := ComparePositions(position-int(PositionOffset*1_000_000), positions)
 
 			var text string

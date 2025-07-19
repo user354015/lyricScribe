@@ -35,7 +35,7 @@ func GetPlayer(pref string) string {
 	return "none"
 }
 
-func GetPlayerInfo(name string) Song {
+func GetPlayerInfo(name string) (Song, int) {
 	var playerInfo Song
 
 	conn, e := dbus.ConnectSessionBus()
@@ -53,20 +53,10 @@ func GetPlayerInfo(name string) Song {
 	playerInfo.Name = metadata["xesam:title"].Value().(string)
 	playerInfo.Length = int(metadata["mpris:length"].Value().(int64))
 
-	return playerInfo
-}
-
-func GetPlayerPosition(name string) int {
-	conn, e := dbus.ConnectSessionBus()
-	Check(e)
-	defer conn.Close()
-
-	player := conn.Object(name, dbus.ObjectPath(PlayerPath))
-
 	var position int
 	e = player.Call("org.freedesktop.DBus.Properties.Get", 0,
 		"org.mpris.MediaPlayer2.Player", "Position").Store(&position)
 	Check(e)
 
-	return position
+	return playerInfo, position
 }
