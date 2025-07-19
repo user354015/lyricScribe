@@ -36,6 +36,9 @@ func DownloadLyrics(track Song) []Lyric {
 
 	if search && len(lyrics) == 1 {
 		lyrics, status = searchLyrics(searchUrl)
+		if len(lyrics) == 1 {
+			status = 404
+		}
 	}
 
 	if status == 404 {
