@@ -1,10 +1,10 @@
 package main
 
 import (
-	"github.com/godbus/dbus/v5"
-	"sort"
 	"strconv"
 	"strings"
+
+	"github.com/godbus/dbus/v5"
 )
 
 func Check(e error) {
@@ -37,46 +37,16 @@ func ConvertTimestampToSeconds(timestamp string) float64 {
 	return minutes*60 + seconds
 }
 
-// func ComparePositions(position int, positions []int) int {
-// 	for i := range positions {
-// 		if positions[i] > position {
-// 			return i
-// 		}
-// 	}
-// 	return 0
-// }
-
-// func ComparePositions(position int, positions []int) int {
-// 	// Find the last lyric whose timestamp has passed (current lyric)
-// 	currentIndex := 0
-// 	for i := range positions {
-// 		if positions[i] <= position {
-// 			currentIndex = i
-// 		} else {
-// 			break
-// 		}
-// 	}
-// 	if currentIndex <= len(positions) {
-// 		return currentIndex
-// 	} else {
-// 		return 0
-// 	}
-// }
-
-func ComparePositions(position int, positions []int) int {
+func ComparePositions(position int, positions []int, expectedPos int) int {
 	if len(positions) == 0 {
 		return 0
 	}
 
-	// Find the first index where positions[i] > position
-	i := sort.Search(len(positions), func(i int) bool {
-		return positions[i] > position
-	})
-
-	// Get the first lyric behind current position
-	if i != 0 {
-		return i - 1
-	} else {
-		return 0
+	for i := expectedPos; i < len(positions); i++ {
+		if positions[i] > position && i > 1 {
+			return i - 1
+		}
 	}
+
+	return 0
 }

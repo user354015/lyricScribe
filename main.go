@@ -54,11 +54,12 @@ func main() {
 	for true {
 		setup()
 
+		var id int
 		playerInfo := GetPlayerInfo(player)
 		for currentSong == playerInfo {
 			playerInfo = GetPlayerInfo(player)
 			position := GetPlayerPosition(player)
-			id := ComparePositions(position-int(PositionOffset*1_000_000), positions)
+			id = ComparePositions(position-int(PositionOffset*1_000_000), positions, id)
 
 			var text string
 			if positions[id]-position < SilenceTimout*1_000_000 {
