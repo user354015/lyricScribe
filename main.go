@@ -13,18 +13,19 @@ import (
 // 	"The Tale of a Cruel World (Calamity Original Soundtrack)",
 // 	733363645}
 
-var player string
+var ActivePlayer string
+var PlayerInfo Song
 var lyrics []Lyric
 var currentSong Song
 var positions []int
 
 func setup() {
-	player = GetPlayer(PreferedPlayer)
-	if player == "none" {
+	ActivePlayer = GetPlayer(PreferedPlayer)
+	if ActivePlayer == "none" {
 		Check(errors.New(ReturnNoActivePlayer))
 	}
 
-	currentSong = GetPlayerInfo(player)
+	currentSong = GetPlayerInfo(ActivePlayer)
 	lyrics = DownloadLyrics(currentSong)
 
 	positions = []int{}
@@ -53,12 +54,12 @@ func main() {
 
 	for true {
 		setup()
+		SetupDBSignals(ActivePlayer)
 
 		var id int
-		playerInfo := GetPlayerInfo(player)
-		for currentSong == playerInfo {
-			playerInfo = GetPlayerInfo(player)
-			position := GetPlayerPosition(player)
+		PlayerInfo = GetPlayerInfo(ActivePlayer)
+		for currentSong == PlayerInfo {
+			position := GetPlayerPosition(ActivePlayer)
 			id = ComparePositions(position-int(PositionOffset*1_000_000), positions, id)
 
 			var text string

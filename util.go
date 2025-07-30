@@ -19,6 +19,7 @@ func InitDBusConnection() {
 	var err error
 	DbusConn, err = dbus.SessionBus()
 	Check(err)
+
 }
 
 func CloseDBusConnection() {
@@ -49,4 +50,29 @@ func ComparePositions(position int, positions []int, expectedPos int) int {
 	}
 
 	return 0
+}
+
+func SetupDBSignals(sender string) {
+	err := DbusConn.AddMatchSignal(
+		dbus.WithMatchSender(sender),
+		dbus.WithMatchObjectPath("/org/mpris/MediaPlayer2"),
+		dbus.WithMatchInterface("org.freedesktop.DBus.Properties"),
+		dbus.WithMatchMember("PropertiesChanged"))
+	Check(err)
+
+	signals := make(chan *dbus.Signal, 10)
+	DbusConn.Signal(signals)
+
+	go func() {
+		for signal := range signals {
+			HandleSignal(signal)
+		}
+	}()
+}
+
+func HandleSignal(signal *dbus.Signal) {
+	switch signal.Name {
+	case "org.freedesktop.DBus.Properties.PropertiesChanged":
+		PlayerInfo = GetPlayerInfo(ActivePlayer)
+	}
 }
