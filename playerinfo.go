@@ -59,13 +59,3 @@ func GetPlayerPosition(name string) int {
 
 	return position
 }
-
-// func AsyncGetPlayerPosition(name string) <-chan int {
-// 	ch := make(chan int, 1)
-// 	go func() {
-// 		position := GetPlayerPosition(name)
-// 		ch <- position
-// 		close(ch)
-// 	}()
-// 	return ch
-// }
