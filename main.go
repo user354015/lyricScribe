@@ -32,6 +32,7 @@ func setup() {
 	for i := range lyrics {
 		positions = append(positions, lyrics[i].Position)
 	}
+
 }
 
 var mode string = ProgramMode
@@ -56,9 +57,12 @@ func main() {
 		setup()
 		SetupDBSignals(ActivePlayer)
 
-		var id int
 		PlayerInfo = GetPlayerInfo(ActivePlayer)
+
+		var id int
 		for currentSong == PlayerInfo {
+			// posChan := AsyncGetPlayerPosition(ActivePlayer)
+			// position := <-posChan
 			position := GetPlayerPosition(ActivePlayer)
 			id = ComparePositions(position-int(PositionOffset*1_000_000), positions, id)
 

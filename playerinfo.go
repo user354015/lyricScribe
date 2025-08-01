@@ -51,6 +51,7 @@ func GetPlayerInfo(name string) Song {
 
 func GetPlayerPosition(name string) int {
 	player := DbusConn.Object(name, dbus.ObjectPath(PlayerPath))
+
 	var position int
 	e := player.Call("org.freedesktop.DBus.Properties.Get", 0,
 		"org.mpris.MediaPlayer2.Player", "Position").Store(&position)
@@ -58,3 +59,13 @@ func GetPlayerPosition(name string) int {
 
 	return position
 }
+
+// func AsyncGetPlayerPosition(name string) <-chan int {
+// 	ch := make(chan int, 1)
+// 	go func() {
+// 		position := GetPlayerPosition(name)
+// 		ch <- position
+// 		close(ch)
+// 	}()
+// 	return ch
+// }
