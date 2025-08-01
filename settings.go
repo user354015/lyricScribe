@@ -12,7 +12,7 @@ const (
 	FetchSearchUrl string = "https://lrclib.net/api/search?q="
 
 	PreferedPlayer string = "tauon"
-	// PreferedPlayer string = "chromium.instance934"
+	// PreferedPlayer string = "chromim.instance"
 	PlayerPrefix string = "org.mpris.MediaPlayer2."
 	PlayerPath   string = "/org/mpris/MediaPlayer2"
 
