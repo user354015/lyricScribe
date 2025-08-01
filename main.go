@@ -61,8 +61,6 @@ func main() {
 
 		var id int
 		for currentSong == PlayerInfo {
-			// posChan := AsyncGetPlayerPosition(ActivePlayer)
-			// position := <-posChan
 			position := GetPlayerPosition(ActivePlayer)
 			id = ComparePositions(position-int(PositionOffset*1_000_000), positions, id)
 
