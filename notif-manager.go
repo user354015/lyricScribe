@@ -6,7 +6,7 @@ func NotifyUser(title string, message string) error {
 	obj := DbusConn.Object("org.freedesktop.Notifications", "/org/freedesktop/Notifications")
 
 	call := obj.Call("org.freedesktop.Notifications.Notify", 0,
-		ProgramName,               // app_name
+		c.General.ProgramName,     // app_name
 		uint32(0),                 //
 		"",                        // app_icon
 		title,                     // title

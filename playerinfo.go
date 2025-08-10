@@ -51,7 +51,6 @@ func GetPlayerInfo(name string) Song {
 
 func GetPlayerPosition(name string) int {
 	player := DbusConn.Object(name, dbus.ObjectPath(PlayerPath))
-
 	var position int
 	e := player.Call("org.freedesktop.DBus.Properties.Get", 0,
 		"org.mpris.MediaPlayer2.Player", "Position").Store(&position)

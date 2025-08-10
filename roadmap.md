@@ -7,5 +7,5 @@
     - [ ] Ability for multiple clients to hook up to a server instead of fetching duplicate information each.
     - [ ] A third output mode, returning only the current lyric, most suitable for scripting.
     - [ ] Locally caching lyrics up to a certain size for speed and to not abuse `lrclib.net`.
-- [x] Performance optimizations
-    - [x] Switch to using dbus signals instead of fetching information every cycle
+- [ ] Performance optimizations
+    - [ ] Switch to using dbus signals instead of fetching information every cycle

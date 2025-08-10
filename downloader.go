@@ -25,8 +25,8 @@ func DownloadLyrics(track Song) []Lyric {
 
 	var lyrics []Lyric
 
-	match := slices.Contains([]string{"both", "match"}, FetchMode)
-	search := slices.Contains([]string{"both", "search"}, FetchMode)
+	match := slices.Contains([]string{"both", "match"}, c.Search.Depth)
+	search := slices.Contains([]string{"both", "search"}, c.Search.Depth)
 
 	var status int
 
@@ -35,10 +35,7 @@ func DownloadLyrics(track Song) []Lyric {
 	}
 
 	if search && len(lyrics) == 1 {
-		lyrics, status = searchLyrics(searchUrl)
-		if len(lyrics) == 1 {
-			status = 404
-		}
+		lyrics, _ = searchLyrics(searchUrl)
 	}
 
 	if status == 404 {

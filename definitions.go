@@ -38,7 +38,7 @@ const (
 )
 
 func SetLogMessages() {
-	switch LoggingMode {
+	switch c.General.Logging {
 	case "silent":
 		ReturnSongNotFound = []Lyric{{"", 0}}
 		ReturnNoLiveLyrics = []Lyric{{"", 0}}
