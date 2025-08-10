@@ -87,7 +87,7 @@ func main() {
 
 			displayText(text)
 
-			time.Sleep(time.Duration(c.Player.Step * 1_000_000))
+			time.Sleep(time.Duration(c.Player.Step * 1_000_000_000))
 		}
 
 		// Small cooldown to prevent spamming the api
