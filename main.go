@@ -72,6 +72,7 @@ func main() {
 	SetLogMessages()
 
 	for State != 0 {
+		displayText("")
 		setup()
 
 		playerInfo := GetPlayerInfo(player)
