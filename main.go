@@ -50,6 +50,8 @@ func displayText(text string) {
 	}
 }
 
+var State int = 1 // 0: Stop, 1: Run, 2: Pause
+
 var mode string = "display"
 var program *Program
 
@@ -69,11 +71,11 @@ func main() {
 
 	SetLogMessages()
 
-	for true {
+	for State != 0 {
 		setup()
 
 		playerInfo := GetPlayerInfo(player)
-		for currentSong == playerInfo {
+		for currentSong == playerInfo && State != 0 {
 			playerInfo = GetPlayerInfo(player)
 			position := GetPlayerPosition(player)
 			id := ComparePositions(position-int(c.Player.PositionOffset*1_000_000), positions)
