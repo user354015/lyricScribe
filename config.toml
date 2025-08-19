@@ -4,7 +4,7 @@
 program_name = "LyricScribe"
 
 # Available modes: display (default), debug
-program_mode = "debug"
+program_mode = "display"
 # Available modes: silent (default), display
 logging = "silent"
 
