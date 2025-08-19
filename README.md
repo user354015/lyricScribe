@@ -1,8 +1,6 @@
 ## What?
 A simple Go script that downloads, checks and displays the synced lyrics for the song currently playing using MPRIS.
 
-[>Showcase](Showcase.mp4)
-
 ## Why?
 Nobody else was gonna do it properly, so screw it, I'm doing it myself.
 
