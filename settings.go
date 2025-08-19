@@ -39,7 +39,24 @@ type ConfigOptions struct {
 	} `toml:"player"`
 }
 
+var DefaultConfig ConfigOptions
 var c ConfigOptions
+
+func SetupDefaultConfig() {
+	DefaultConfig.General.ProgramName = "LyricScribe"
+	DefaultConfig.General.ProgramMode = "display"
+	DefaultConfig.General.Logging = "silent"
+
+	DefaultConfig.Internal.ApiUrl = FetchApiUrl
+	DefaultConfig.Internal.ApiUrl = FetchSearchUrl
+
+	DefaultConfig.Search.Depth = "both"
+
+	DefaultConfig.Player.Player = "mpv"
+	DefaultConfig.Player.PositionOffset = -0.52
+	DefaultConfig.Player.Step = 0.3
+	DefaultConfig.Player.SilenceTimeout = 3
+}
 
 func ReadConfig() ConfigOptions {
 	configPath, e := os.UserConfigDir()
