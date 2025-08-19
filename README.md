@@ -50,3 +50,7 @@ then bind launching a terminal to a shortcut:
 
 ## Future of the project
 This is my first real project and I plan to take good care of it. I have [many plans](/roadmap.md) for the future and will do my best to maintain and improve this for as long as possible. That being said, I am just some guy doing this on my (limited) free time and cannot make any promises.
+
+
+## Credits
+This project would have been impossible without the existance of [LRCLIB.net](LRCLIB.net). Please go donate to them if you are able to!
