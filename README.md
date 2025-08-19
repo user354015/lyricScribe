@@ -11,7 +11,7 @@ Nobody else was gonna do it properly, so screw it, I'm doing it myself.
 2. Move to the src directory ```cd lyricScribe/src```
 3. Build the project ```go build .```
 
-Or download the binary from the [releases](https://github.com/user354015/releases)
+Or download the binary from the [releases](https://github.com/user354015/lyricScribe/releases)
 
 
 ### Floating lyrics on Hyprland
