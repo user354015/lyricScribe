@@ -1,3 +1,5 @@
+# NOTE! As of now it is required to be placed in `~/.config/lyrics/config.toml`
+
 [general]
 program_name = "LyricScribe"
 
