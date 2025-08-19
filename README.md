@@ -1,15 +1,22 @@
 ## What?
 A simple Go script that downloads, checks and displays the synced lyrics for the song currently playing using MPRIS.
 
+https://github.com/user-attachments/assets/e7ea9d94-986e-44d3-8f3f-c1323ebb1219
+
+
 ## Why?
 Nobody else was gonna do it properly, so screw it, I'm doing it myself.
+
 
 ## How?
 1. Clone this repo ```git clone https://github.com/user354015/lyricScribe```
 2. Move to the src directory ```cd lyricScribe/src```
 3. Build the project ```go build .```
+4. Move the default config to the correct location ```mkdir -p ~/.config/lyrics ; cp config.toml ~/.config/lyrics/```
 
-Or download the binary from the [releases](https://github.com/user354015/lyricScribe/releases)
+Or download the binary *and* the config from the [releases](https://github.com/user354015/lyricScribe/releases)
+
+> Important! The config file must be placed in `~/.config/lyrics/` and with valid values for now. Will be changed in a future release
 
 
 ### Floating lyrics on Hyprland
