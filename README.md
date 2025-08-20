@@ -21,7 +21,7 @@ Or download the binary *and* the config from the [releases](https://github.com/u
 
 ### Floating lyrics on Hyprland
 <details>
-<summary>If you're on hyprland and want to replicate a setup similar to mine you can use these window rules along with a terminal of your choice</summary>
+<summary>Click here if you're on hyprland and want to replicate a setup similar to mine you can use these window rules along with a terminal of your choice</summary>
 
 ``` bash
 windowrule = size 1100 160, class:lyricscribe
