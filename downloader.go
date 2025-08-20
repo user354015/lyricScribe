@@ -43,9 +43,16 @@ func DownloadLyrics(track Song) []Lyric {
 		return ReturnSongNotFound
 	}
 	if status != 200 {
-		NotifyUser(MsgSongNotFound, strings.Join([]string{MsgSongNotFound, ": "}, strconv.Itoa(status)))
+		NotifyUser(MsgSongNotFound, strings.Join([]string{MsgSongNotFound, " - "}, strconv.Itoa(status)))
 		return ReturnSongNotFound
 	}
+
+	if len(lyrics) == 1 {
+		if lyrics[0].Lyric == "" {
+			lyrics[0].Lyric = MsgNoLiveLyrics
+		}
+	}
+
 	if lyrics != nil {
 		if lyrics[0].Lyric == MsgNoLiveLyrics {
 			NotifyUser(MsgNoLiveLyrics, MsgNoLiveLyrics)
