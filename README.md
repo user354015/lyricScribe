@@ -17,9 +17,9 @@ git clone https://github.com/user354015/lyricScribe
 ```bash
 cd lyricScribe
 ```
-3. Build the project
+3. Build the project and make it executable
 ```bash
-go build .
+go build . ; chmod +x lyricscribe
 ```
 4. Move the default config to the correct location
 ```bash
