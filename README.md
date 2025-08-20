@@ -69,4 +69,4 @@ This is my first real project and I plan to take good care of it. I have [many p
 
 
 ## Credits
-This project would have been impossible without the existance of [LRCLIB.net](LRCLIB.net). Please go donate to them if you are able to!
+This project would have been impossible without the existance of [LRCLIB.net](https://www.LRCLIB.net). Please go donate to them if you are able to!
