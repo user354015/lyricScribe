@@ -47,15 +47,10 @@ func DownloadLyrics(track Song) []Lyric {
 		return ReturnSongNotFound
 	}
 
-	if len(lyrics) == 1 {
-		if lyrics[0].Lyric == "" {
-			lyrics[0].Lyric = MsgNoLiveLyrics
-		}
-	}
-
 	if lyrics != nil {
-		if lyrics[0].Lyric == MsgNoLiveLyrics {
+		if len(lyrics) == 1 && lyrics[0].Lyric == "" {
 			NotifyUser(MsgNoLiveLyrics, MsgNoLiveLyrics)
+			return ReturnNoLiveLyrics
 		}
 	}
 
