@@ -19,11 +19,13 @@ cd lyricScribe
 ```
 3. Build the project and make it executable
 ```bash
-go build . ; chmod +x lyricscribe
+go build .
+chmod +x lyricscribe
 ```
 4. Move the default config to the correct location
 ```bash
-mkdir -p ~/.config/lyrics ; cp config.toml ~/.config/lyrics/
+mkdir -p ~/.config/lyrics
+cp config.toml ~/.config/lyrics/
 ```
 
 Or download the binary *and* the config from the [releases](https://github.com/user354015/lyricScribe/releases)
