@@ -1,7 +1,7 @@
 ## What?
 A simple Go script that downloads, checks and displays the synced lyrics for the song currently playing using MPRIS.
 
-https://github.com/user-attachments/assets/e7ea9d94-986e-44d3-8f3f-c1323ebb1219
+https://github.com/user-attachments/assets/7905037f-5c62-43a2-86e6-96e41b18af12
 
 
 ## Why?
