@@ -9,10 +9,18 @@ Nobody else was gonna do it properly, so screw it, I'm doing it myself.
 
 
 ## How?
-1. Clone this repo ```git clone https://github.com/user354015/lyricScribe```
-2. Move to the cloned directory ```cd lyricScribe```
-3. Build the project ```go build .```
-4. Move the default config to the correct location ```mkdir -p ~/.config/lyrics ; cp config.toml ~/.config/lyrics/```
+1. Clone this repo
+```bash
+git clone https://github.com/user354015/lyricScribe```
+2. Move to the cloned directory
+```bash
+cd lyricScribe```
+3. Build the project
+```bash
+go build .```
+4. Move the default config to the correct location
+```bash
+mkdir -p ~/.config/lyrics ; cp config.toml ~/.config/lyrics/```
 
 Or download the binary *and* the config from the [releases](https://github.com/user354015/lyricScribe/releases)
 
