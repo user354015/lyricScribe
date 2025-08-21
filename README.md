@@ -28,10 +28,7 @@ mkdir -p ~/.config/lyrics
 cp config.toml ~/.config/lyrics/
 ```
 
-Or download the binary *and* the config from the [releases](https://github.com/user354015/lyricScribe/releases)
-
-> Important! The config file must be placed in `~/.config/lyrics/` and with valid values for now. Will be changed in a future release
-
+Or download the binary from the [releases](https://github.com/user354015/lyricScribe/releases)
 
 ### Floating lyrics on Hyprland
 <details>
