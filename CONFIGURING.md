@@ -1,7 +1,9 @@
 ## List of options
 This is a list of all available options. The configuration file is written in `TOML` format and must be located in `$XDG_CONFIG_HOME/lyrics/config.toml` (usually `~/.config/lyrics/config.toml`). Each of the following sub-sections should also be a section in the config.
 
-Each subsection below corresponds to a section in the config file.  
+Each subsection below corresponds to a section in the config file.
+
+An example config file can be found [here](/config.toml)
 
 ---
 
