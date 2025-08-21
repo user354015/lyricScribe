@@ -58,16 +58,16 @@ func SetupDefaultConfig() {
 	DefaultConfig.Player.SilenceTimeout = 3
 }
 
-func ReadConfig() ConfigOptions {
+func ReadConfig() {
 	configPath, e := os.UserConfigDir()
 	Check(e)
 	configPath = filepath.Join(configPath, "lyrics", "config.toml")
 
 	config := &ConfigOptions{}
+	*config = DefaultConfig
 
 	_, e = toml.DecodeFile(configPath, config)
 	Check(e)
 
 	c = *config
-	return *config
 }

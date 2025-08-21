@@ -21,7 +21,7 @@ var positions []int
 var prevText string
 
 func setup() {
-	_ = ReadConfig()
+	ReadConfig()
 
 	player = GetPlayer(c.Player.Player)
 	if player == "none" {
@@ -56,7 +56,9 @@ var mode string = "display"
 var program *Program
 
 func main() {
+	SetupDefaultConfig()
 	ReadConfig()
+
 	mode = c.General.ProgramMode
 
 	switch mode {
