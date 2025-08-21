@@ -11,13 +11,13 @@ import (
 )
 
 func DownloadLyrics(track Song) []Lyric {
-	matchUrl := FetchApiUrl +
+	matchUrl := c.Internal.ApiUrl +
 		"artist_name=" + url.QueryEscape(track.Artist) +
 		"&track_name=" + url.QueryEscape(track.Name) +
 		"&album_name=" + url.QueryEscape(track.Album) +
 		"&track_duration=" + strconv.Itoa(track.Length)
 
-	searchUrl := FetchSearchUrl +
+	searchUrl := c.Internal.SearchUrl +
 		url.QueryEscape(track.Artist) + "+" +
 		url.QueryEscape(track.Name)
 	//  url.QueryEscape(track.Album) +
@@ -34,8 +34,8 @@ func DownloadLyrics(track Song) []Lyric {
 		lyrics, status = findLyrics(matchUrl)
 	}
 
-	if search && len(lyrics) == 1 {
-		lyrics, _ = searchLyrics(searchUrl)
+	if search && (len(lyrics) == 1 || len(lyrics) == 0) {
+		lyrics, status = searchLyrics(searchUrl)
 	}
 
 	if status == 404 {
