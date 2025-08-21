@@ -30,6 +30,9 @@ cp config.toml ~/.config/lyrics/
 
 Or download the binary from the [releases](https://github.com/user354015/lyricScribe/releases)
 
+## Configuration
+Information about the config location and options can be found [here](/CONFIGURING.md)
+
 ### Floating lyrics on Hyprland
 <details>
 <summary>Click here if you're on hyprland and want to replicate a setup similar to mine. </summary>
