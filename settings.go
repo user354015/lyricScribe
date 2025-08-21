@@ -19,6 +19,7 @@ const (
 type ConfigOptions struct {
 	General struct {
 		ProgramName string `toml:"program_name"`
+		Updates     bool   `toml:"check_for_updates"`
 		ProgramMode string `toml:"program_mode"`
 		Logging     string `toml:"logging"`
 	} `toml:"general"`
@@ -45,6 +46,7 @@ var c ConfigOptions
 
 func SetupDefaultConfig() {
 	DefaultConfig.General.ProgramName = "LyricScribe"
+	DefaultConfig.General.Updates = true
 	DefaultConfig.General.ProgramMode = "display"
 	DefaultConfig.General.Logging = "silent"
 

@@ -1,5 +1,8 @@
 package main
 
+const Version string = "v0.2"
+const TargetRepo string = "https://api.github.com/repos/user354015/lyricScribe/releases/latest"
+
 type Song struct {
 	Name   string
 	Artist string

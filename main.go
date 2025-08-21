@@ -59,6 +59,17 @@ func main() {
 	SetupDefaultConfig()
 	ReadConfig()
 
+	InitDBusConnection()
+	defer CloseDBusConnection()
+
+	SetLogMessages()
+
+	if c.General.Updates == true {
+		if IsLatestVers(Version, TargetRepo) == false {
+			NotifyUser("Outdated Version", "Not using latest version, please consider updating!")
+		}
+	}
+
 	mode = c.General.ProgramMode
 
 	switch mode {
@@ -67,11 +78,6 @@ func main() {
 		program = NewProgram()
 		defer program.Quit()
 	}
-
-	InitDBusConnection()
-	defer CloseDBusConnection()
-
-	SetLogMessages()
 
 	for State != 0 {
 		displayText("")

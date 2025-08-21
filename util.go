@@ -1,10 +1,14 @@
 package main
 
 import (
-	"github.com/godbus/dbus/v5"
+	"encoding/json"
+	"io"
+	"net/http"
 	"sort"
 	"strconv"
 	"strings"
+
+	"github.com/godbus/dbus/v5"
 )
 
 func Check(e error) {
@@ -78,5 +82,28 @@ func ComparePositions(position int, positions []int) int {
 		return i - 1
 	} else {
 		return 0
+	}
+}
+
+// https://api.github.com/repos/user354015/lyricScribe/releases/latest
+func IsLatestVers(version string, repo string) bool {
+	response, e := http.Get(repo)
+	Check(e)
+	defer response.Body.Close()
+
+	body, e := io.ReadAll(response.Body)
+	Check(e)
+
+	var repoData struct {
+		Version string `json:"name"`
+	}
+
+	e = json.Unmarshal(body, &repoData)
+	Check(e)
+
+	if version == repoData.Version {
+		return true
+	} else {
+		return false
 	}
 }
