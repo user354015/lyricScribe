@@ -48,7 +48,7 @@ func SetupDefaultConfig() {
 	DefaultConfig.General.Logging = "silent"
 
 	DefaultConfig.Internal.ApiUrl = FetchApiUrl
-	DefaultConfig.Internal.ApiUrl = FetchSearchUrl
+	DefaultConfig.Internal.SearchUrl = FetchSearchUrl
 
 	DefaultConfig.Search.Depth = "both"
 
