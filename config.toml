@@ -2,6 +2,7 @@
 
 [general]
 program_name = "LyricScribe"
+check_for_updates = true
 
 # Available modes: display (default), debug
 program_mode = "display"

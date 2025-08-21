@@ -9,11 +9,12 @@ An example config file can be found [here](/config.toml)
 
 ### General (`[general]`)  
 
-| Name           | Description                                                                                      | Accepted Values     | Default       |
-| -------------- | ------------------------------------------------------------------------------------------------ | ------------------- | ------------- |
-| `program_name` | The name used to identify the program (e.g., in notifications).                                  | Any `string`        | `LyricScribe` |
-| `program_mode` | How lyrics should be displayed. `display` is for normal use, `debug` is for scripting/debugging. | `display`, `debug`  | `display`     |
-| `logging`      | Controls whether issues should be shown in the program output.                                   | `display`, `silent` | `silent`      |
+| Name                | Description                                                                                               | Accepted Values     | Default       |
+| ------------------- | --------------------------------------------------------------------------------------------------------- | ------------------- | ------------- |
+| `program_name`      | The name used to identify the program (e.g., in notifications).                                           | Any `string`        | `LyricScribe` |
+| `check_for_updates` | Notifies when program version is different from latest version on GitHub.                                 | `true`, `false`     | `true`        |
+| `program_mode`      | How lyrics should be displayed. `display` is for normal use, `debug` is for scripting/debugging.          | `display`, `debug`  | `display`     |
+| `logging`           | Controls whether issues should be shown in the program output.                                            | `display`, `silent` | `silent`      |
 
 ---
 
