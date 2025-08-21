@@ -12,7 +12,6 @@ logging = "silent"
 depth = "both" # Available modes: match, search, both
 
 [player]
-
 # Any string contained in the name of the player suffices:
 player = "tauon"
 # player = "chromium"
