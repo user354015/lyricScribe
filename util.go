@@ -95,7 +95,7 @@ func IsLatestVers(version string, repo string) bool {
 	Check(e)
 
 	var repoData struct {
-		Version string `json:"name"`
+		Version string `json:"tag_name"`
 	}
 
 	e = json.Unmarshal(body, &repoData)
