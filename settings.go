@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"os"
 	"path/filepath"
 
@@ -59,15 +60,19 @@ func SetupDefaultConfig() {
 }
 
 func ReadConfig() {
+
 	configPath, e := os.UserConfigDir()
 	Check(e)
 	configPath = filepath.Join(configPath, "lyrics", "config.toml")
+	_, e = os.Stat(configPath)
 
 	config := &ConfigOptions{}
 	*config = DefaultConfig
 
-	_, e = toml.DecodeFile(configPath, config)
-	Check(e)
+	if !errors.Is(e, os.ErrNotExist) {
+		_, e = toml.DecodeFile(configPath, config)
+		Check(e)
+	}
 
 	c = *config
 }
