@@ -41,7 +41,7 @@ func FetchLyrics(track Song) []Lyric {
 		lyrics, status = findLocalLyrics(track.Path)
 	}
 
-	if match {
+	if match && status != 200 {
 		lyrics, status = matchLyrics(matchUrl)
 	}
 
