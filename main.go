@@ -29,7 +29,7 @@ func setup() {
 	}
 
 	currentSong = GetPlayerInfo(player)
-	lyrics = DownloadLyrics(currentSong)
+	lyrics = FetchLyrics(currentSong)
 
 	positions = []int{}
 	for i := range lyrics {

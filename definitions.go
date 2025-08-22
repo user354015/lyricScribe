@@ -8,6 +8,7 @@ type Song struct {
 	Artist string
 	Album  string
 	Length int
+	Path   string
 }
 
 type Lyric struct {

@@ -2,8 +2,10 @@ package main
 
 import (
 	"encoding/json"
+	"errors"
 	"io"
 	"net/http"
+	"os"
 	"sort"
 	"strconv"
 	"strings"
@@ -83,6 +85,24 @@ func ComparePositions(position int, positions []int) int {
 	} else {
 		return 0
 	}
+}
+
+func ReadFile(path string) string {
+	file, e := os.ReadFile(path)
+	Check(e)
+
+	return string(file)
+}
+
+func FileExists(path string) bool {
+	_, e := os.Stat(path)
+
+	if errors.Is(e, os.ErrNotExist) {
+		return false
+	} else {
+		return true
+	}
+
 }
 
 // https://api.github.com/repos/user354015/lyricScribe/releases/latest
