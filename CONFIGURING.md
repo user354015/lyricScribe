@@ -16,15 +16,11 @@ An example config file can be found [here](/config.toml)
 | `program_mode`      | How lyrics should be displayed. `display` is for normal use, `debug` is for scripting/debugging.          | `display`, `debug`  | `display`     |
 | `logging`           | Controls whether issues should be shown in the program output.                                            | `display`, `silent` | `silent`      |
 
----
-
 ### Search (`[search]`)  
 
 | Name    | Description                                                                                                                                                                                                          | Accepted Values           | Default |
 |---------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------|---------|
 | `depth` | Controls how the program searches for lyrics. `match` requires an exact match (artist, album, song name, duration). `search` uses only artist and song name. `both` uses `match` first, with `search` as a fallback. | `match`, `search`, `both` | `both`  |
-
----
 
 ### Player (`[player]`)
 
