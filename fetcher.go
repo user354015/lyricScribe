@@ -150,15 +150,17 @@ func parseLyrics(request string, mode string) []Lyric {
 	}
 
 	for i := range rawLyrics {
-		var lyric Lyric
-		sepLyric := strings.Split(rawLyrics[i], "]")
+		if rawLyrics[i] != "" {
+			var lyric Lyric
+			sepLyric := strings.Split(rawLyrics[i], "]")
 
-		var position float64
-		timestamp := strings.Split(sepLyric[0], "[")[1]
-		position = ConvertTimestampToSeconds(timestamp) * 1_000_000
+			var position float64
+			timestamp := strings.Split(sepLyric[0], "[")[1]
+			position = ConvertTimestampToSeconds(timestamp) * 1_000_000
 
-		lyric = Lyric{sepLyric[1], int(position)}
-		parsedLyrics = append(parsedLyrics, lyric)
+			lyric = Lyric{sepLyric[1], int(position)}
+			parsedLyrics = append(parsedLyrics, lyric)
+		}
 	}
 
 	return parsedLyrics
