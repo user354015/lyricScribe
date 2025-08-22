@@ -2,8 +2,11 @@ package main
 
 import (
 	"encoding/json"
+	"errors"
 	"io"
 	"net/http"
+	"net/url"
+	"os"
 	"sort"
 	"strconv"
 	"strings"
@@ -67,6 +70,14 @@ func ConvertTimestampToSeconds(timestamp string) float64 {
 // 	}
 // }
 
+func UrlToPath(u string) string {
+	url, e := url.Parse(u)
+	Check(e)
+	path := url.Path
+
+	return path
+}
+
 func ComparePositions(position int, positions []int) int {
 	if len(positions) == 0 {
 		return 0
@@ -83,6 +94,24 @@ func ComparePositions(position int, positions []int) int {
 	} else {
 		return 0
 	}
+}
+
+func ReadFile(path string) string {
+	file, e := os.ReadFile(path)
+	Check(e)
+
+	return string(file)
+}
+
+func FileExists(path string) bool {
+	_, e := os.Stat(path)
+
+	if errors.Is(e, os.ErrNotExist) {
+		return false
+	} else {
+		return true
+	}
+
 }
 
 // https://api.github.com/repos/user354015/lyricScribe/releases/latest

@@ -10,7 +10,13 @@ import (
 	"strings"
 )
 
-func DownloadLyrics(track Song) []Lyric {
+var (
+	local  bool
+	match  bool
+	search bool
+)
+
+func FetchLyrics(track Song) []Lyric {
 	matchUrl := c.Internal.ApiUrl +
 		"artist_name=" + url.QueryEscape(track.Artist) +
 		"&track_name=" + url.QueryEscape(track.Name) +
@@ -23,15 +29,20 @@ func DownloadLyrics(track Song) []Lyric {
 	//  url.QueryEscape(track.Album) +
 	//  strconv.Itoa(track.Length)
 
+	// local = slices.Contains([]string{"local"}, c.Search.Depth)
+	local = true
+	match = slices.Contains([]string{"both", "match"}, c.Search.Depth)
+	search = slices.Contains([]string{"both", "search"}, c.Search.Depth)
+
 	var lyrics []Lyric
-
-	match := slices.Contains([]string{"both", "match"}, c.Search.Depth)
-	search := slices.Contains([]string{"both", "search"}, c.Search.Depth)
-
 	var status int
 
+	if local {
+		lyrics, status = findLocalLyrics(track.Path)
+	}
+
 	if match {
-		lyrics, status = findLyrics(matchUrl)
+		lyrics, status = matchLyrics(matchUrl)
 	}
 
 	if search && (len(lyrics) == 1 || len(lyrics) == 0) {
@@ -57,7 +68,24 @@ func DownloadLyrics(track Song) []Lyric {
 	return lyrics
 }
 
-func findLyrics(url string) ([]Lyric, int) {
+func findLocalLyrics(path string) ([]Lyric, int) {
+	pathArr := strings.Split(path, ".")
+	pathArr = pathArr[:len(pathArr)-1]
+
+	lrcPath := strings.Join(pathArr, ".")
+	lrcPath = lrcPath + ".lrc"
+
+	if !FileExists(lrcPath) {
+		return nil, 404
+	}
+
+	lrcFile := ReadFile(lrcPath)
+	lyrics := parseLyrics(lrcFile, "local")
+
+	return lyrics, 200
+}
+
+func matchLyrics(url string) ([]Lyric, int) {
 	response, e := http.Get(url)
 	Check(e)
 	defer response.Body.Close()
@@ -65,7 +93,7 @@ func findLyrics(url string) ([]Lyric, int) {
 	body, e := io.ReadAll(response.Body)
 	Check(e)
 
-	lyrics := parseLyrics(string(body), false)
+	lyrics := parseLyrics(string(body), "match")
 
 	return lyrics, response.StatusCode
 }
@@ -78,19 +106,25 @@ func searchLyrics(searchUrl string) ([]Lyric, int) {
 	body, e := io.ReadAll(response.Body)
 	Check(e)
 
-	lyrics := parseLyrics(string(body), true)
+	lyrics := parseLyrics(string(body), "search")
 
 	return lyrics, response.StatusCode
 }
 
-func parseLyrics(request string, search bool) []Lyric {
+func parseLyrics(request string, mode string) []Lyric {
 	var parsedLyrics []Lyric = []Lyric{{"", 0}}
 
 	var decodedLyrics Request
-	if !search {
+	var rawLyrics []string = []string{""}
+
+	switch mode {
+	case "match":
+		var decodedLyrics Request
 		e := json.Unmarshal([]byte(request), &decodedLyrics)
 		Check(e)
-	} else {
+		rawLyrics[0] = decodedLyrics.SyncedLyrics
+
+	case "search":
 		var decodedResults []Request
 		e := json.Unmarshal([]byte(request), &decodedResults)
 		Check(e)
@@ -99,13 +133,22 @@ func parseLyrics(request string, search bool) []Lyric {
 				decodedLyrics = decodedResults[i]
 			}
 		}
+		rawLyrics[0] = decodedLyrics.SyncedLyrics
+
+	case "local":
+		rawLyrics[0] = request
 	}
 
-	if decodedLyrics.SyncedLyrics == "" {
+	if rawLyrics[0] == "" {
 		return ReturnNoLiveLyrics
 	}
 
-	rawLyrics := strings.Split(decodedLyrics.SyncedLyrics, "\n")
+	rawLyrics = strings.Split(rawLyrics[0], "\n")
+	// Remove trailing newlines
+	if rawLyrics[len(rawLyrics)-1] == "" {
+		rawLyrics = rawLyrics[:len(rawLyrics)-2]
+	}
+
 	for i := range rawLyrics {
 		var lyric Lyric
 		sepLyric := strings.Split(rawLyrics[i], "]")

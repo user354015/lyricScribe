@@ -1,7 +1,6 @@
 package main
 
 import (
-	"errors"
 	"os"
 	"path/filepath"
 
@@ -66,12 +65,11 @@ func ReadConfig() {
 	configPath, e := os.UserConfigDir()
 	Check(e)
 	configPath = filepath.Join(configPath, "lyrics", "config.toml")
-	_, e = os.Stat(configPath)
 
 	config := &ConfigOptions{}
 	*config = DefaultConfig
 
-	if !errors.Is(e, os.ErrNotExist) {
+	if FileExists(configPath) {
 		_, e = toml.DecodeFile(configPath, config)
 		Check(e)
 	}
