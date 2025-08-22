@@ -5,6 +5,7 @@ import (
 	"errors"
 	"io"
 	"net/http"
+	"net/url"
 	"os"
 	"sort"
 	"strconv"
@@ -68,6 +69,14 @@ func ConvertTimestampToSeconds(timestamp string) float64 {
 // 		return 0
 // 	}
 // }
+
+func UrlToPath(u string) string {
+	url, e := url.Parse(u)
+	Check(e)
+	path := url.Path
+
+	return path
+}
 
 func ComparePositions(position int, positions []int) int {
 	if len(positions) == 0 {
