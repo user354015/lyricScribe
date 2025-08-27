@@ -25,12 +25,17 @@ func getActivePlayers() []string {
 func GetPlayer(pref string) string {
 	players := getActivePlayers()
 
+	if players == nil {
+		NotifyUser("No Active Players", "No active MPRIS-compatible players are running.")
+	}
+
 	for i := range players {
 		if strings.Contains(players[i], pref) {
 			return players[i]
 		}
 	}
-	return "none"
+	return players[0]
+
 }
 
 func GetPlayerInfo(name string) Song {
