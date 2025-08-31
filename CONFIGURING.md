@@ -31,3 +31,8 @@ An example config file can be found [here](/config.toml)
 | `step`            | The time interval (in seconds) used for polling/stepping through playback.             | Any `float`     | `0.3`   |
 | `silence_timeout` | The maximum silence duration (in seconds) before lyrics are considered paused/stopped. | Any `float`     | `3`     |
 
+### Display (`[display]`)
+| Name         | Description                                                              | Accepted values     | Default   |
+| ------------ | ------------------------------------------------------------------------ | ------------------- | --------- |
+| `foreground` | Text color used in display mode.                                         | Any hex color value | `#ffffff` |
+| `background` | Background color used in display mode. Leave empty to disable completely | Any hex color value | `#000000` |

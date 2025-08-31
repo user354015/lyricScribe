@@ -56,8 +56,8 @@ func (m Model) View() string {
 	style := lipgloss.NewStyle().
 		Width(m.width).
 		Align(lipgloss.Center).
-		Foreground(lipgloss.Color("#ffffff")).
-		Background(lipgloss.Color("#000000")).
+		Foreground(lipgloss.Color(c.Display.FgColor)).
+		Background(lipgloss.Color(c.Display.BgColor)).
 		Padding(0, 1)
 
 	content := strings.Repeat("\n", verticalPadding) +

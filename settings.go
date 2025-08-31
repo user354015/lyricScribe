@@ -38,6 +38,11 @@ type ConfigOptions struct {
 		Step           float64 `toml:"step"`
 		SilenceTimeout int     `toml:"silence_timeout"`
 	} `toml:"player"`
+
+	Display struct {
+		FgColor string `toml:"foreground"`
+		BgColor string `toml:"background"`
+	} `toml:"display"`
 }
 
 var DefaultConfig ConfigOptions
@@ -58,6 +63,9 @@ func SetupDefaultConfig() {
 	DefaultConfig.Player.PositionOffset = -0.52
 	DefaultConfig.Player.Step = 0.3
 	DefaultConfig.Player.SilenceTimeout = 3
+
+	DefaultConfig.Display.FgColor = "#ffffff"
+	DefaultConfig.Display.BgColor = "#000000"
 }
 
 func ReadConfig() {

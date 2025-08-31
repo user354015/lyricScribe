@@ -23,3 +23,7 @@ position_offset = -0.52
 step = 0.3
 silence_timeout = 3
 
+[display]
+foreground = "#ffffff"
+background = "#000000"
+
