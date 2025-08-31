@@ -159,6 +159,7 @@ func parseLyrics(request string, mode string) []Lyric {
 			position = ConvertTimestampToSeconds(timestamp) * 1_000_000
 
 			lyric = Lyric{sepLyric[1], int(position)}
+			lyric.Lyric = strings.TrimSpace(lyric.Lyric)
 			parsedLyrics = append(parsedLyrics, lyric)
 		}
 	}
