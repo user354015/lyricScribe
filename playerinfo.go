@@ -51,7 +51,11 @@ func GetPlayerInfo(name string) Song {
 	playerInfo.Artist = metadata["xesam:artist"].Value().([]string)[0]
 	playerInfo.Name = metadata["xesam:title"].Value().(string)
 	playerInfo.Length = int(metadata["mpris:length"].Value().(int64))
-	playerInfo.Path = UrlToPath(metadata["xesam:url"].Value().(string))
+
+	filePath := metadata["xesam:url"].Value()
+	if filePath != nil {
+		playerInfo.Path = UrlToPath(filePath.(string))
+	}
 
 	return playerInfo
 }
