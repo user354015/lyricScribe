@@ -65,11 +65,33 @@ func GetTrackInfo(conn *dbus.Conn, playerService string) (*core.Track, error) {
 	return trackInfo, err
 }
 
-// func WatchTrackChanges(conn *dbus.Conn, playerService string, callback func(*core.Track)) {
-// 	conn.BusObject().Call("org.freedesktop.DBus.AddMatch", 0,
-// 		"type='signal',interface='org.freedesktop.DBus.Properties',member='PropertiesChanged'")
+func WatchTrackChanges(conn *dbus.Conn, playerService string, callback func(*core.Track)) {
 
-// }
+	signalChan := make(chan *dbus.Signal, 10)
+	conn.Signal(signalChan)
+
+	matchRule := `type='signal', interface='org.freedesktop.DBus.Properties',
+		member='PropertiesChanged', path='/org/mpris/MediaPlayer2', sender='` +
+		playerService + `'`
+
+	conn.BusObject().Call("org.freedesktop.DBus.AddMatch", 0, matchRule)
+
+	go func() {
+		for signal := range signalChan {
+			if signal.Name == "org.freedesktop.DBus.Properties.PropertiesChanged" && len(signal.Body) >= 2 {
+				// Check if Metadata changed
+				if changedProps, ok := signal.Body[1].(map[string]dbus.Variant); ok {
+					if _, hasMetadata := changedProps["Metadata"]; hasMetadata {
+						track, err := GetTrackInfo(conn, playerService)
+						if err == nil {
+							callback(track)
+						}
+					}
+				}
+			}
+		}
+	}()
+}
 
 // func parseMetadata(metadata dbus.Variant) *core.Track {
 
