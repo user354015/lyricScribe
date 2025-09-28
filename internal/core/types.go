@@ -7,3 +7,8 @@ type Track struct {
 	Duration int
 	Location string
 }
+
+type Lyric struct {
+	Lyric    string
+	Position int
+}
