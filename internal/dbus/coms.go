@@ -2,9 +2,11 @@ package dbus
 
 import (
 	"errors"
+	"net/url"
 	"strings"
 
 	"muse/internal/core"
+	"muse/internal/util"
 
 	"github.com/godbus/dbus"
 )
@@ -62,6 +64,24 @@ func GetTrackInfo(conn *dbus.Conn, playerService string) (*core.Track, error) {
 		Duration: int(metadata["mpris:length"].Value().(int64)),
 	}
 
+	path := metadata["xesam:url"].Value().(string)
+	location := ""
+
+	if path != "" {
+		path, err := url.PathUnescape(path)
+		path, ok := strings.CutPrefix(path, "file://")
+
+		if err != nil || !ok {
+			return nil, err
+		}
+
+		if util.FileExists(path) {
+			location = path
+		}
+	}
+
+	trackInfo.Location = location
+
 	return trackInfo, err
 }
 
@@ -93,9 +113,11 @@ func WatchTrackChanges(conn *dbus.Conn, playerService string, callback func(*cor
 	}()
 }
 
-// func parseMetadata(metadata dbus.Variant) *core.Track {
+func GetPlayerPosition(conn *dbus.Conn, playerPath string) (int, error) {
+	player := conn.Object(playerPath, "/org/mpris/MediaPlayer2")
+	var position int
+	err := player.Call("org.freedesktop.DBus.Properties.Get", 0,
+		"org.mpris.MediaPlayer2.Player", "Position").Store(&position)
 
-// }
-
-// func parsePropertiesChanged(signal *dbus.Signal) *core.Track {
-// }
+	return position, err
+}

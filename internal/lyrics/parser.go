@@ -8,7 +8,10 @@ import (
 
 func ParseLrc(lrcFile string) (*[]core.Lyric, error) {
 	var rawLyrics = strings.Split(lrcFile, "\n")
-	var parsedLyrics []core.Lyric = []core.Lyric{}
+	var parsedLyrics []core.Lyric = []core.Lyric{{}}
+
+	if rawLyrics != nil {
+	}
 
 	for i := range rawLyrics {
 		if rawLyrics[i] != "" {
