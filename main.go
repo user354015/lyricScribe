@@ -3,11 +3,14 @@ package main
 import (
 	"muse/internal/config"
 	"muse/internal/core"
+	"muse/internal/shared"
 )
 
 func main() {
 
-	cfg, err := config.Load("~/.config/muse/config.toml")
+	shared.InitLogger(false)
+
+	cfg, err := config.Load("/home/unicorn/.config/muse/config.toml")
 	if err != nil {
 		panic(err)
 	}

@@ -55,11 +55,11 @@ func (a *App) Start() error {
 		return err
 	}
 	a.player = player
-	fmt.Printf("Found player: %s\n", player)
+	shared.Debug("Found player: %s\n", player)
 
 	track, err := ipc.GetTrackInfo(a.conn, a.player)
 	if err == nil {
-		fmt.Printf("Initial track: %s - %s\n", track.Artist, track.Title)
+		shared.Debug("Initial track: %s - %s\n", track.Artist, track.Title)
 		a.handleTrackChange(track)
 	}
 
@@ -90,7 +90,7 @@ func (a *App) syncLoop() {
 			}
 			position, err := ipc.GetPlayerPosition(a.conn, a.player)
 			if err != nil {
-				fmt.Printf("Failed to get position: %v\n", err)
+				shared.Debug("Failed to get position: %v\n", err)
 				continue
 			}
 
@@ -99,14 +99,13 @@ func (a *App) syncLoop() {
 
 			// Apply position offset
 			position += int(a.config.Player.PositionOffset)
-			fmt.Printf("Position: %d ms\n", position)
+			shared.Debug("Position: %d ms\n", position)
 
 			idx := GetCurrentLine(*a.Lyrics, position)
-			fmt.Printf("Current line index: %d\n", idx)
+			shared.Debug("Current line index: %d\n", idx)
 
 			// Only display if line changed
 			if idx < len(*a.Lyrics) && len(*a.Lyrics) > 0 {
-				fmt.Printf("Displaying: %s\n", lyric.Lyric)
 				lyric = (*a.Lyrics)[idx]
 				a.displayLine(&lyric)
 			}
@@ -121,26 +120,26 @@ func (a *App) watchTrackChanges() {
 }
 
 func (a *App) handleTrackChange(track *shared.Track) {
-	fmt.Printf("Track changed: %s - %s\n", track.Artist, track.Title)
+	shared.Debug("Track changed: %s - %s\n", track.Artist, track.Title)
 
 	a.currentTrack = track
 	a.lastLine = nil
 
 	rawLyrics, err := fetch.FetchLyrics(track)
 	if err != nil {
-		fmt.Printf("Failed to fetch lyrics: %v\n", err)
+		shared.Debug("Failed to fetch lyrics: %v\n", err)
 		a.Lyrics = nil
 		return
 	}
-	fmt.Printf("Fetched lyrics, length: %d\n", len(rawLyrics))
+	shared.Debug("Fetched lyrics, length: %d\n", len(rawLyrics))
 
 	lyrics, err := lyric.ParseLrc(rawLyrics)
 	if err != nil {
-		fmt.Printf("Failed to parse lyrics: %v\n", err)
+		shared.Debug("Failed to parse lyrics: %v\n", err)
 		a.Lyrics = nil
 		return
 	}
-	fmt.Printf("Parsed %d lyric lines\n", len(*lyrics))
+	shared.Debug("Parsed %d lyric lines\n", len(*lyrics))
 
 	a.Lyrics = lyrics
 }
