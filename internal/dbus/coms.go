@@ -1,7 +1,6 @@
 package dbus
 
 import (
-	"errors"
 	"net/url"
 	"strings"
 
@@ -32,7 +31,7 @@ func FindActivePlayer(conn *dbus.Conn) (string, error) {
 	}
 
 	if len(players) == 0 {
-		return "", errors.New("No active media players found")
+		return "", core.ErrNoActivePlayers
 	}
 
 	for i := range players {
@@ -61,7 +60,7 @@ func GetTrackInfo(conn *dbus.Conn, playerService string) (*core.Track, error) {
 		Album:    metadata["xesam:album"].Value().(string),
 		Artist:   metadata["xesam:artist"].Value().([]string)[0],
 		Title:    metadata["xesam:title"].Value().(string),
-		Duration: int(metadata["mpris:length"].Value().(int64)),
+		Duration: int64(metadata["mpris:length"].Value().(int64)),
 	}
 
 	path := metadata["xesam:url"].Value().(string)

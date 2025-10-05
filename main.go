@@ -12,22 +12,44 @@ import (
 
 func main() {
 
-	conn, _ := dbus.Connect()
-	player, _ := dbus.FindActivePlayer(conn)
-	track, _ := dbus.GetTrackInfo(conn, player)
+	conn, err := dbus.Connect()
+	if err != nil {
+		panic("could not establish dbus connection")
+	}
+	player, err := dbus.FindActivePlayer(conn)
+	if err != nil {
+		panic(err)
+	}
+	track, err := dbus.GetTrackInfo(conn, player)
+	if err != nil {
+		panic(err)
+	}
 
+	var lastLine string
 	track, lyrics := updateTrackInfo(track)
 
 	dbus.WatchTrackChanges(conn, player, func(item *core.Track) {
 		track, lyrics = updateTrackInfo(item)
+		lastLine = ""
 	})
 
-	for true {
-		pos, _ := dbus.GetPlayerPosition(conn, player)
-		idx := core.GetCurrentLine(lyrics, pos)
-		text := lyrics[idx].Lyric
+	for {
+		pos, err := dbus.GetPlayerPosition(conn, player)
+		if err != nil {
+			panic(core.ErrNoPlayerPos)
+		}
 
-		display.Display(text)
+		idx := core.GetCurrentLine(lyrics, pos)
+		text := "…"
+		if idx < len(lyrics) && len(lyrics) > 0 {
+			text = lyrics[idx].Lyric
+		}
+
+		if text != lastLine {
+			display.Display(text)
+			lastLine = text
+		}
+
 		time.Sleep(0_500_000_000)
 
 	}
@@ -36,6 +58,9 @@ func main() {
 func updateTrackInfo(track *core.Track) (*core.Track, []core.Lyric) {
 	rawLyrs, err := fetch.FetchLyrics(track)
 	if err != nil {
+		if err == core.ErrNoLyricsFound {
+			return track, nil
+		}
 		panic(err)
 	}
 

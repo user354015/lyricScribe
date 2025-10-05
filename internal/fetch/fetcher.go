@@ -1,7 +1,6 @@
 package fetch
 
 import (
-	"errors"
 	"muse/internal/core"
 	"muse/internal/util"
 )
@@ -17,7 +16,7 @@ func FetchLyrics(track *core.Track) (lyrics string, err error) {
 		return lyrics, nil
 	}
 
-	return lyrics, errors.New("no lyrics found")
+	return lyrics, core.ErrNoLyricsFound
 }
 
 func FetchLocalLyrics(track *core.Track) (string, error) {

@@ -4,7 +4,7 @@ type Track struct {
 	Title    string
 	Artist   string
 	Album    string
-	Duration int
+	Duration int64
 	Location string
 }
 

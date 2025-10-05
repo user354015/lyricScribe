@@ -14,12 +14,13 @@ func FetchFromLRCLIB(track *core.Track) (string, error) {
 
 	baseURL := "https://lrclib.net/api/get"
 
-	// Build query parameters
-	matchUrl := baseURL + "?" +
-		"artist_name=" + url.QueryEscape(track.Artist) +
-		"&track_name=" + url.QueryEscape(track.Title) +
-		"&album_name=" + url.QueryEscape(track.Album) +
-		"&track_duration=" + strconv.Itoa(track.Duration/1_000_000)
+	params := url.Values{}
+	params.Add("artist_name", track.Artist)
+	params.Add("track_name", track.Title)
+	params.Add("album_name", track.Album)
+	params.Add("track_duration", strconv.Itoa(int(track.Duration/1_000_000)))
+
+	matchUrl := baseURL + "?" + params.Encode()
 
 	response, err := http.Get(matchUrl)
 	if err != nil {
