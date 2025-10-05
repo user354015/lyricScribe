@@ -1,11 +1,11 @@
 package fetch
 
 import (
-	"muse/internal/core"
+	"muse/internal/shared"
 	"muse/internal/util"
 )
 
-func FetchLyrics(track *core.Track) (lyrics string, err error) {
+func FetchLyrics(track *shared.Track) (lyrics string, err error) {
 	lyrics, err = FetchLocalLyrics(track)
 	if lyrics != "" && err == nil {
 		return lyrics, nil
@@ -16,10 +16,10 @@ func FetchLyrics(track *core.Track) (lyrics string, err error) {
 		return lyrics, nil
 	}
 
-	return lyrics, core.ErrNoLyricsFound
+	return lyrics, shared.ErrNoLyricsFound
 }
 
-func FetchLocalLyrics(track *core.Track) (string, error) {
+func FetchLocalLyrics(track *shared.Track) (string, error) {
 	var lyrics string
 	location, err := util.ReplaceExtension(track.Location, "lrc")
 	if err != nil {

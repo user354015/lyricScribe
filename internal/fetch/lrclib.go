@@ -2,14 +2,14 @@ package fetch
 
 import (
 	"io"
-	"muse/internal/core"
 	"muse/internal/lyric"
+	"muse/internal/shared"
 	"net/http"
 	"net/url"
 	"strconv"
 )
 
-func FetchFromLRCLIB(track *core.Track) (string, error) {
+func FetchFromLRCLIB(track *shared.Track) (string, error) {
 	var lyrics string
 
 	baseURL := "https://lrclib.net/api/get"

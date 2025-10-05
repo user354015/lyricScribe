@@ -1,10 +1,11 @@
 package core
 
 import (
+	"muse/internal/shared"
 	"sort"
 )
 
-func GetCurrentLine(lyric []Lyric, pos int) int {
+func GetCurrentLine(lyric []shared.Lyric, pos int) int {
 	var positions []int
 	for i := range lyric {
 		positions = append(positions, lyric[i].Position)

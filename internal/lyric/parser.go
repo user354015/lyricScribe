@@ -2,7 +2,7 @@ package lyric
 
 import (
 	"encoding/json"
-	"muse/internal/core"
+	"muse/internal/shared"
 	"muse/internal/util"
 	"strings"
 )
@@ -19,16 +19,16 @@ type lrclibTrack struct {
 	SyncedLyrics string  `json:"syncedLyrics"`
 }
 
-func ParseLrc(lrcFile string) (*[]core.Lyric, error) {
+func ParseLrc(lrcFile string) (*[]shared.Lyric, error) {
 	var rawLyrics = strings.Split(lrcFile, "\n")
-	var parsedLyrics []core.Lyric
+	var parsedLyrics []shared.Lyric
 
 	if rawLyrics != nil {
 	}
 
 	for i := range rawLyrics {
 		if rawLyrics[i] != "" {
-			var lyric core.Lyric
+			var lyric shared.Lyric
 			sepLyric := strings.Split(rawLyrics[i], "]")
 
 			var position float64
@@ -38,7 +38,7 @@ func ParseLrc(lrcFile string) (*[]core.Lyric, error) {
 				return nil, err
 			}
 
-			lyric = core.Lyric{Lyric: sepLyric[1], Position: int(position)}
+			lyric = shared.Lyric{Lyric: sepLyric[1], Position: int(position)}
 			lyric.Lyric = strings.TrimSpace(lyric.Lyric)
 			parsedLyrics = append(parsedLyrics, lyric)
 		}
