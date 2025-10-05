@@ -3,6 +3,7 @@ package main
 import (
 	"time"
 
+	"muse/internal/config"
 	"muse/internal/core"
 	"muse/internal/dbus"
 	"muse/internal/display"
@@ -12,11 +13,16 @@ import (
 
 func main() {
 
+	cfg, err := config.Load("~/.config/muse/config.toml")
+	if err != nil {
+		panic(err)
+	}
+
 	conn, err := dbus.Connect()
 	if err != nil {
 		panic("could not establish dbus connection")
 	}
-	player, err := dbus.FindActivePlayer(conn)
+	player, err := dbus.FindActivePlayer(conn, cfg)
 	if err != nil {
 		panic(err)
 	}

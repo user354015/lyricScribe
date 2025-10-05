@@ -4,6 +4,7 @@ import (
 	"net/url"
 	"strings"
 
+	"muse/internal/config"
 	"muse/internal/core"
 	"muse/internal/util"
 
@@ -15,7 +16,7 @@ func Connect() (dbusConn *dbus.Conn, err error) {
 	return
 }
 
-func FindActivePlayer(conn *dbus.Conn) (string, error) {
+func FindActivePlayer(conn *dbus.Conn, cfg *config.Config) (string, error) {
 	var dbusObjects []string
 	err := conn.BusObject().Call("org.freedesktop.DBus.ListNames", 0).Store(&dbusObjects)
 	if err != nil {
@@ -23,7 +24,6 @@ func FindActivePlayer(conn *dbus.Conn) (string, error) {
 	}
 
 	var players []string
-	var player string
 	for i := range dbusObjects {
 		if strings.HasPrefix(dbusObjects[i], "org.mpris.MediaPlayer2.") {
 			players = append(players, dbusObjects[i])
@@ -34,13 +34,15 @@ func FindActivePlayer(conn *dbus.Conn) (string, error) {
 		return "", core.ErrNoActivePlayers
 	}
 
-	for i := range players {
-		if strings.Contains(players[i], "tauon") {
-			player = players[i]
+	for pref := range cfg.Player.Preferred {
+		for i := range players {
+			if strings.Contains(players[i], cfg.Player.Preferred[pref]) {
+				return players[i], nil
+			}
 		}
 	}
 
-	return player, err
+	return players[0], err
 }
 
 func GetTrackInfo(conn *dbus.Conn, playerService string) (*core.Track, error) {
