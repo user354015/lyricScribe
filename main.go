@@ -7,7 +7,7 @@ import (
 	"muse/internal/dbus"
 	"muse/internal/display"
 	"muse/internal/fetch"
-	"muse/internal/lyrics"
+	"muse/internal/lyric"
 )
 
 func main() {
@@ -34,12 +34,12 @@ func main() {
 }
 
 func updateTrackInfo(track *core.Track) (*core.Track, []core.Lyric) {
-	rawLyrs, err := fetch.FetchLocalLyrics(track)
+	rawLyrs, err := fetch.FetchLyrics(track)
 	if err != nil {
 		panic(err)
 	}
 
-	lyrics, err := lyrics.ParseLrc(rawLyrs)
+	lyrics, err := lyric.ParseLrc(rawLyrs)
 	if err != nil {
 		panic(err)
 	}
