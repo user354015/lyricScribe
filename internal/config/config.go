@@ -45,7 +45,7 @@ func Default() *Config {
 	var c Config
 
 	c.General.ProgramName = "muse"
-	c.General.DisplayMode = "simple"
+	c.General.DisplayMode = "display"
 	c.General.Updates = true
 
 	c.Player.Preferred = []string{"tauon", "mpv", "spotify", "chromium"}
