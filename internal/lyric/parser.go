@@ -44,6 +44,10 @@ func ParseLrc(lrcFile string) (*[]shared.Lyric, error) {
 		}
 	}
 
+	if parsedLyrics[0].Position != 0 {
+		parsedLyrics = append([]shared.Lyric{{Lyric: "", Position: 0}}, parsedLyrics...)
+	}
+
 	return &parsedLyrics, nil
 }
 

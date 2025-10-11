@@ -1,7 +1,6 @@
 package core
 
 import (
-	"fmt"
 	"muse/internal/config"
 	"muse/internal/display"
 	"muse/internal/fetch"
@@ -13,6 +12,7 @@ import (
 	"syscall"
 	"time"
 
+	tea "github.com/charmbracelet/bubbletea"
 	godbus "github.com/godbus/dbus"
 )
 
@@ -30,6 +30,9 @@ type App struct {
 	// Control channels
 	stopChan        chan struct{}
 	trackChangeChan chan *shared.Track
+
+	// Display modes
+	tuiProgram *tea.Program
 }
 
 func NewApp(cfg *config.Config) *App {
@@ -56,6 +59,17 @@ func (a *App) Start() error {
 	}
 	a.player = player
 	shared.Debug("Found player: %s\n", player)
+
+	if a.config.General.DisplayMode == "tui" {
+		model := display.NewTUI(a.config)
+		a.tuiProgram = tea.NewProgram(model, tea.WithAltScreen())
+
+		// Run in goroutine so Start() can continue
+		go func() {
+			a.tuiProgram.Run()
+			a.Stop()
+		}()
+	}
 
 	track, err := ipc.GetTrackInfo(a.conn, a.player)
 	if err == nil {
@@ -85,7 +99,7 @@ func (a *App) syncLoop() {
 			return
 		case <-ticker.C:
 			if a.Lyrics == nil || len(*a.Lyrics) == 0 {
-				fmt.Println("No lyrics available")
+				shared.Debug("No lyrics available")
 				continue
 			}
 			position, err := ipc.GetPlayerPosition(a.conn, a.player)
@@ -124,6 +138,7 @@ func (a *App) handleTrackChange(track *shared.Track) {
 
 	a.currentTrack = track
 	a.lastLine = nil
+	a.Lyrics = nil
 
 	rawLyrics, err := fetch.FetchLyrics(track)
 	if err != nil {
@@ -147,12 +162,15 @@ func (a *App) handleTrackChange(track *shared.Track) {
 func (a *App) displayLine(lyric *shared.Lyric) {
 	switch a.config.General.DisplayMode {
 	case "simple":
-		display.Display(lyric.Lyric)
+		display.Minimal(lyric.Lyric)
 	case "tui":
-		// TODO: TUI display
+		if a.tuiProgram != nil {
+			a.tuiProgram.Send(display.TextUpdateMsg(*lyric))
+		}
 	case "window":
 		// TODO: Window display
 	default:
+		display.Minimal(lyric.Lyric)
 	}
 }
 
@@ -169,4 +187,5 @@ func (a *App) Stop() {
 	if a.conn != nil {
 		a.conn.Close()
 	}
+	os.Exit(0)
 }
