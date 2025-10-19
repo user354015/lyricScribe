@@ -33,6 +33,9 @@ type App struct {
 
 	// Display modes
 	tuiProgram *tea.Program
+
+	// Notifications
+	notifier *ipc.Notifier
 }
 
 func NewApp(cfg *config.Config) *App {
@@ -52,6 +55,9 @@ func (a *App) Start() error {
 	}
 	a.conn = conn
 
+	// Set up notifications
+	a.notifier = ipc.NewNotifier(a.conn, a.config.General.ProgramName)
+
 	// Find prefered player
 	player, err := ipc.FindActivePlayer(conn, a.config.Player.Preferred)
 	if err != nil {
@@ -60,6 +66,7 @@ func (a *App) Start() error {
 	a.player = player
 	shared.Debug("Found player: %s\n", player)
 
+	// Create tui mode
 	if a.config.General.DisplayMode == "tui" {
 		model := display.NewTUI(a.config)
 		a.tuiProgram = tea.NewProgram(model, tea.WithAltScreen())
@@ -155,6 +162,8 @@ func (a *App) handleTrackChange(track *shared.Track) {
 		return
 	}
 	shared.Debug("Parsed %d lyric lines\n", len(*lyrics))
+
+	ipc.Notify(a.notifier, "Track Change", a.currentTrack.Title)
 
 	a.Lyrics = lyrics
 }
