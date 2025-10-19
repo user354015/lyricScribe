@@ -119,7 +119,7 @@ func (a *App) syncLoop() {
 			lyric.Lyric = "…"
 
 			// Apply position offset
-			position += int(a.config.Player.PositionOffset)
+			position -= int(a.config.Player.PositionOffset) * 1_000
 			shared.Debug("Position: %d ms\n", position)
 
 			idx := GetCurrentLine(*a.Lyrics, position)
@@ -149,10 +149,15 @@ func (a *App) handleTrackChange(track *shared.Track) {
 
 	rawLyrics, err := fetch.FetchLyrics(track)
 	if err != nil {
+		if err == shared.ErrNoLyricsFound {
+			ipc.Notify(a.notifier, "No Lyrics Found", "No lyrics could be found for this song.")
+		}
+
 		shared.Debug("Failed to fetch lyrics: %v\n", err)
 		a.Lyrics = nil
 		return
 	}
+
 	shared.Debug("Fetched lyrics, length: %d\n", len(rawLyrics))
 
 	lyrics, err := lyric.ParseLrc(rawLyrics)
@@ -162,8 +167,6 @@ func (a *App) handleTrackChange(track *shared.Track) {
 		return
 	}
 	shared.Debug("Parsed %d lyric lines\n", len(*lyrics))
-
-	ipc.Notify(a.notifier, "Track Change", a.currentTrack.Title)
 
 	a.Lyrics = lyrics
 }
