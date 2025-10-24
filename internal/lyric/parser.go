@@ -60,3 +60,13 @@ func ParseJson(jsonData []byte) (string, error) {
 
 	return result.SyncedLyrics, err
 }
+
+func ParseJsonArr(jsonData []byte) (string, error) {
+	var result []lrclibTrack
+	err := json.Unmarshal(jsonData, &result)
+	if len(result) <= 0 && err != nil {
+		return "", err
+	}
+
+	return result[0].SyncedLyrics, err
+}
