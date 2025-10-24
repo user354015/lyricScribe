@@ -8,7 +8,8 @@ import (
 
 func main() {
 
-	shared.InitLogger(false)
+	shared.InitLogger(true)
+	defer shared.StopLogger()
 
 	cfg, err := config.Load("/home/unicorn/.config/muse/config.toml")
 	if err != nil {

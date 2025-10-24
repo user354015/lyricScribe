@@ -8,11 +8,30 @@ import (
 var (
 	DebugEnabled bool
 	logger       *log.Logger
+	logFile      *os.File
 )
 
 func InitLogger(debug bool) {
 	DebugEnabled = debug
 	logger = log.New(os.Stdout, "", log.Ltime)
+
+	l, _ := os.UserConfigDir()
+	l += "/muse/muse.log"
+
+	f, err := os.OpenFile(l, os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0666)
+
+	if err != nil {
+		log.Fatalf("error opening file: %v", err)
+	}
+
+	logFile = f
+
+	logger.SetOutput(f)
+
+}
+
+func StopLogger() {
+	logFile.Close()
 }
 
 func Debug(format string, args ...interface{}) {

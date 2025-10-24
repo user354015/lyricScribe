@@ -32,7 +32,8 @@ type App struct {
 	trackChangeChan chan *shared.Track
 
 	// Display modes
-	tuiProgram *tea.Program
+	tuiProgram  *tea.Program
+	fyneDisplay *display.WindowDisplay
 
 	// Notifications
 	notifier *ipc.Notifier
@@ -67,7 +68,8 @@ func (a *App) Start() error {
 	shared.Debug("Found player: %s\n", player)
 
 	// Create tui mode
-	if a.config.General.DisplayMode == "tui" {
+	switch a.config.General.DisplayMode {
+	case "tui":
 		model := display.NewTUI(a.config)
 		a.tuiProgram = tea.NewProgram(model, tea.WithAltScreen())
 
@@ -76,6 +78,10 @@ func (a *App) Start() error {
 			a.tuiProgram.Run()
 			a.Stop()
 		}()
+
+	case "window":
+		a.fyneDisplay = display.NewWindow(a.config)
+		a.fyneDisplay.Start()
 	}
 
 	track, err := ipc.GetTrackInfo(a.conn, a.player)
@@ -180,7 +186,7 @@ func (a *App) displayLine(lyric *shared.Lyric) {
 			a.tuiProgram.Send(display.TextUpdateMsg(*lyric))
 		}
 	case "window":
-		// TODO: Window display
+		a.fyneDisplay.Send(lyric.Lyric)
 	default:
 		display.Minimal(lyric.Lyric)
 	}
