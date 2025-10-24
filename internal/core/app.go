@@ -33,7 +33,8 @@ type App struct {
 
 	// Display modes
 	tuiProgram  *tea.Program
-	fyneDisplay *display.WindowDisplay
+	fyneConfig  *display.Config
+	fyneDisplay *display.Display
 
 	// Notifications
 	notifier *ipc.Notifier
@@ -80,7 +81,8 @@ func (a *App) Start() error {
 		}()
 
 	case "window":
-		a.fyneDisplay = display.NewWindow(a.config)
+		a.fyneConfig = display.NewConfig("muse", "muse")
+		a.fyneDisplay = display.NewDisplay(a.fyneConfig)
 		a.fyneDisplay.Start()
 	}
 
@@ -126,10 +128,10 @@ func (a *App) syncLoop() {
 
 			// Apply position offset
 			position -= int(a.config.Player.PositionOffset) * 1_000
-			shared.Debug("Position: %d ms\n", position)
+			// shared.Debug("Position: %d ms\n", position)
 
 			idx := GetCurrentLine(*a.Lyrics, position)
-			shared.Debug("Current line index: %d\n", idx)
+			// shared.Debug("Current line index: %d\n", idx)
 
 			// Only display if line changed
 			if idx < len(*a.Lyrics) && len(*a.Lyrics) > 0 {

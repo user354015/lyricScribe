@@ -39,6 +39,7 @@ func MatchLRCLIB(track *shared.Track) (string, int, error) {
 	params.Add("track_duration", strconv.Itoa(int(track.Duration/1_000_000)))
 
 	matchUrl := baseURL + "?" + params.Encode()
+	shared.Debug(matchUrl)
 
 	response, err := http.Get(matchUrl)
 	if err != nil {
