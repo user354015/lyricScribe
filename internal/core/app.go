@@ -207,5 +207,6 @@ func (a *App) Stop() {
 	if a.conn != nil {
 		a.conn.Close()
 	}
+	shared.Debug("Exiting...")
 	os.Exit(0)
 }
