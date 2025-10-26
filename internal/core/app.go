@@ -32,8 +32,8 @@ type App struct {
 	trackChangeChan chan *shared.Track
 
 	// Display modes
-	tuiProgram  *tea.Program
-	fyneConfig  *display.Config
+	tuiProgram *tea.Program
+
 	fyneDisplay *display.Display
 
 	// Notifications
@@ -68,6 +68,22 @@ func (a *App) Start() error {
 	a.player = player
 	shared.Debug("Found player: %s\n", player)
 
+	// Handle first-time track info fetching
+	track, err := ipc.GetTrackInfo(a.conn, a.player)
+	if err == nil {
+		shared.Debug("Initial track: %s - %s\n", track.Artist, track.Title)
+		a.handleTrackChange(track)
+	}
+
+	// Start watching for track changes
+	go a.watchTrackChanges()
+
+	// Start syncing lyrics
+	go a.syncLoop()
+
+	// Prepare for exit
+	go a.waitForShutdown()
+
 	// Create tui mode
 	switch a.config.General.DisplayMode {
 	case "tui":
@@ -81,25 +97,11 @@ func (a *App) Start() error {
 		}()
 
 	case "window":
-		a.fyneConfig = display.NewConfig("muse", "muse")
-		a.fyneDisplay = display.NewDisplay(a.fyneConfig)
+		a.fyneDisplay = display.NewDisplay(a.config)
 		a.fyneDisplay.Start()
 	}
 
-	track, err := ipc.GetTrackInfo(a.conn, a.player)
-	if err == nil {
-		shared.Debug("Initial track: %s - %s\n", track.Artist, track.Title)
-		a.handleTrackChange(track)
-	}
-
-	// Start watching for track changes
-	go a.watchTrackChanges()
-
-	// Start syncing lyrics
-	go a.syncLoop()
-
 	// Exit
-	a.waitForShutdown()
 
 	return nil
 }
@@ -188,7 +190,9 @@ func (a *App) displayLine(lyric *shared.Lyric) {
 			a.tuiProgram.Send(display.TextUpdateMsg(*lyric))
 		}
 	case "window":
-		a.fyneDisplay.Send(lyric.Lyric)
+		if a.fyneDisplay != nil {
+			a.fyneDisplay.UpdateText(lyric.Lyric)
+		}
 	default:
 		display.Minimal(lyric.Lyric)
 	}
@@ -207,6 +211,10 @@ func (a *App) Stop() {
 	if a.conn != nil {
 		a.conn.Close()
 	}
+	if a.fyneDisplay != nil {
+		// a.fyneDisplay.window.Close()
+	}
+
 	shared.Debug("Exiting...")
 	os.Exit(0)
 }
