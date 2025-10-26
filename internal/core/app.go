@@ -216,5 +216,5 @@ func (a *App) Stop() {
 	}
 
 	shared.Debug("Exiting...")
-	os.Exit(0)
+	// os.Exit(0)
 }
