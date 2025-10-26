@@ -44,6 +44,10 @@ func Info(format string, args ...interface{}) {
 	logger.Printf("[INFO] "+format, args...)
 }
 
+func Warn(format string, args ...interface{}) {
+	logger.Printf("[WARN] "+format, args...)
+}
+
 func Error(format string, args ...interface{}) {
 	logger.Printf("[ERROR] "+format, args...)
 }
