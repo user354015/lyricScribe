@@ -81,24 +81,20 @@ func (a *App) Start() error {
 	// Start syncing lyrics
 	go a.syncLoop()
 
+	// Prepare for exit
+	go a.waitForShutdown()
+
 	// Create tui mode
 	switch a.config.General.DisplayMode {
 	case "tui":
 		model := display.NewTUI(a.config)
 		a.tuiProgram = tea.NewProgram(model, tea.WithAltScreen())
-
-		// Run in goroutine so Start() can continue
-		go func() {
-			a.tuiProgram.Run()
-			a.Stop()
-		}()
+		a.tuiProgram.Run()
 
 	case "window":
-
+		a.guiProgram = display.SetUpGui(a.config)
+		display.RunGui(a.guiProgram)
 	}
-
-	// Prepare for exit
-	a.waitForShutdown()
 
 	// Exit
 	a.Stop()
@@ -215,4 +211,5 @@ func (a *App) Stop() {
 	}
 
 	shared.Debug("Exiting...")
+	// os.Exit(0)
 }

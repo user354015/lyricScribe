@@ -1,101 +1,128 @@
 package display
 
 import (
+	"bytes"
+	"image/color"
 	"muse/internal/config"
 	"muse/internal/util"
+	"strings"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/app"
-	"fyne.io/fyne/v2/canvas"
-	"fyne.io/fyne/v2/container"
-	"fyne.io/fyne/v2/layout"
-	"fyne.io/fyne/v2/widget"
+	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/hajimehoshi/ebiten/v2/examples/resources/fonts"
+	"github.com/hajimehoshi/ebiten/v2/text/v2"
 )
 
 type Display struct {
-	app        fyne.App
-	window     fyne.Window
-	theme      fyneTheme
-	cfg        *config.Config
-	richText   *widget.RichText
-	background *canvas.Rectangle
+	text string
 
-	updateChan chan string
+	posx   int
+	posy   int
+	width  int
+	height int
+
+	fgCol color.RGBA
+	bgCol color.RGBA
+
+	face      text.Face
+	config    *config.Config
+	formatter *TextFormatter
+
+	shouldQuit bool
 }
 
-type fyneTheme struct {
-	fontResource fyne.Resource
-	fontSize     float32
+func (d *Display) Layout(outsideHeight, outsideWidth int) (screenW, screenH int) {
+	return d.width, d.height
+}
+func (d *Display) Update() error {
+	return nil
 }
 
-func NewDisplay(c *config.Config) *Display {
+func (d *Display) Draw(screen *ebiten.Image) {
+	screen.Fill(color.Transparent)
+	// screen.Fill(d.bgCol)
+
+	textOps := &text.DrawOptions{}
+	textOps.GeoM.Translate(float64(d.width)/2, float64(d.height)/2)
+	textOps.ColorScale.ScaleWithColor(d.fgCol)
+	textOps.LineSpacing = float64(d.config.Display.FontSize) * 1.2
+	textOps.PrimaryAlign = text.AlignCenter
+	textOps.SecondaryAlign = text.AlignCenter
+	text.Draw(screen, d.text, d.face, textOps)
+
+}
+
+// ---------
+// --
+// ---------
+
+func SetUpGui(c *config.Config) *Display {
 	var d Display
 
-	d.app = app.New()
-	d.window = d.app.NewWindow(c.General.ProgramName)
-	d.cfg = c
+	d.config = c
+	d.posx = d.config.Display.WindowX
+	d.posy = d.config.Display.WindowY
+	d.width = d.config.Display.WindowW
+	d.height = d.config.Display.WindowH
+	d.bgCol = util.HexToRGBA(d.config.Display.BgColor)
+	d.fgCol = util.HexToRGBA(d.config.Display.FgColor)
 
-	// Load and apply custom theme
-	d.theme = createThemeResource(c)
-	fontResource := loadFontResource(c.Display.Font)
-	if fontResource != nil {
-		d.app.Settings().SetTheme(&fyneTheme{
-			fontResource: fontResource,
-			fontSize:     float32(c.Display.FontSize),
-		})
+	d.formatter = NewTextLyricFormatter(int(float64(d.width) * 0.8))
+
+	ff, _ := text.NewGoTextFaceSource(bytes.NewReader(fonts.MPlus1pRegular_ttf))
+
+	d.face = &text.GoTextFace{
+		Source: ff,
+		Size:   float64(d.config.Display.FontSize),
 	}
 
 	return &d
 }
 
-func (d *Display) Start() {
+func RunGui(d *Display) error {
+	ebiten.SetWindowSize(d.width, d.height)
+	ebiten.SetWindowPosition(d.posx, d.posy)
+	// ebiten.SetWindowTitle(d.config.General.ProgramName)
+	ebiten.SetWindowTitle("app")
 
-	// Set window size
-	d.window.SetFixedSize(true)
-	d.window.Resize(fyne.NewSize(
-		float32(d.cfg.Display.WindowW),
-		float32(d.cfg.Display.WindowH),
-	))
-
-	d.richText = widget.NewRichTextFromMarkdown("")
-	d.richText.Wrapping = fyne.TextWrapWord
-	for _, segment := range d.richText.Segments {
-		if text, ok := segment.(*widget.TextSegment); ok {
-			text.Style.Alignment = fyne.TextAlignCenter
-		}
+	opts := &ebiten.RunGameOptions{ScreenTransparent: true}
+	if err := ebiten.RunGameWithOptions(d, opts); err != nil {
+		return err
 	}
-
-	col := util.HexToRGBA(d.cfg.Display.BgColor)
-	d.background = canvas.NewRectangle(col)
-	d.background.Resize(fyne.NewSize(0, 0))
-
-	textWithBg := container.NewStack(
-		d.background,
-		d.richText,
-	)
-
-	content := container.NewStack(
-		container.NewVBox(
-			layout.NewSpacer(),
-			textWithBg,
-			layout.NewSpacer(),
-		))
-
-	d.window.SetContent(content)
-	d.window.ShowAndRun()
+	return nil
 }
 
-func (d *Display) UpdateText(text string) {
-	if d.richText != nil {
-		fyne.DoAndWait(func() {
-			d.richText.ParseMarkdown(text)
-			for _, segment := range d.richText.Segments {
-				if textSeg, ok := segment.(*widget.TextSegment); ok {
-					textSeg.Style.Alignment = fyne.TextAlignCenter
-				}
-			}
+func (d *Display) UpdateText(lyric string) {
+	s, _ := text.Measure(lyric, d.face, 0)
+	size := int(s)
 
-			d.richText.Refresh()
-		})
+	if size <= d.formatter.MaxWidth {
+		d.text = lyric
+		return
 	}
+
+	words := strings.Fields(lyric)
+	if len(words) == 0 {
+		d.text = ""
+		return
+	}
+
+	linesN := int(size/d.formatter.MaxWidth) + 1
+	if linesN < 0 {
+		linesN = 0
+	}
+
+	// var lnSize = linesN
+	var lines []string
+	selector := len(words) / linesN
+	for i := 1; i < linesN+1; i++ {
+		start := selector * (i - 1)
+		end := selector * i
+		if i == linesN {
+			end = len(words)
+		}
+		line := strings.Join(words[start:end], " ")
+		lines = append(lines, line)
+	}
+
+	d.text = strings.Join(lines, "\n")
 }
