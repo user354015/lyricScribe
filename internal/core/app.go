@@ -49,6 +49,17 @@ func NewApp(cfg *config.Config) *App {
 }
 
 func (a *App) Start() error {
+	// --- TEMP FIX TO HIDE WARN ings
+	devNull, _ := os.OpenFile(os.DevNull, os.O_WRONLY, 0)
+	oldStderr := os.Stderr
+	os.Stderr = devNull
+
+	go func() {
+		time.Sleep(100)
+		os.Stderr = oldStderr
+		devNull.Close()
+	}()
+	// ---
 
 	// Connect to dbus
 	conn, err := ipc.Connect()
