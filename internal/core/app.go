@@ -1,6 +1,7 @@
 package core
 
 import (
+	"fmt"
 	"muse/internal/config"
 	"muse/internal/display"
 	"muse/internal/fetch"
@@ -103,6 +104,7 @@ func (a *App) Start() error {
 		a.tuiProgram.Run()
 
 	case "window":
+		fmt.Println("\x1b[?25l")
 		a.guiProgram = display.SetUpGui(a.config)
 		display.RunGui(a.guiProgram)
 	}
