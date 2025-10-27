@@ -23,7 +23,7 @@ type TextUpdateMsg shared.Lyric
 
 func NewTUI(cfg *config.Config) Model {
 	return Model{
-		formatter:   NewLyricFormatter(100),
+		formatter:   NewTextLyricFormatter(100),
 		currentText: "",
 
 		fgColor: cfg.Display.FgColor,
@@ -56,7 +56,7 @@ func (m Model) View() string {
 		return ""
 	}
 
-	wrappedLines := m.formatter.WrapText(m.currentText)
+	wrappedLines := m.formatter.WrapTextChar(m.currentText)
 	if len(wrappedLines) == 1 {
 		if wrappedLines[0] == "" {
 			return ""
