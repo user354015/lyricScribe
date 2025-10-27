@@ -81,13 +81,15 @@ func SetUpGui(c *config.Config) *Display {
 func RunGui(d *Display) error {
 	ebiten.SetWindowSize(d.width, d.height)
 	ebiten.SetWindowPosition(d.posx, d.posy)
-	// ebiten.SetWindowTitle(d.config.General.ProgramName)
-	ebiten.SetWindowTitle("app")
+	ebiten.SetWindowTitle(d.config.General.ProgramName)
+	// ebiten.SetWindowTitle("app")
 
 	opts := &ebiten.RunGameOptions{ScreenTransparent: true}
+
 	if err := ebiten.RunGameWithOptions(d, opts); err != nil {
 		return err
 	}
+
 	return nil
 }
 
