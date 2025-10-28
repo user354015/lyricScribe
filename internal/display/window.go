@@ -5,6 +5,7 @@ import (
 	"image/color"
 	"muse/internal/config"
 	"muse/internal/util"
+	"os"
 	"strings"
 
 	"github.com/hajimehoshi/ebiten/v2"
@@ -13,7 +14,8 @@ import (
 )
 
 type Display struct {
-	text string
+	text    string
+	spacing float64
 
 	posx   int
 	posy   int
@@ -41,6 +43,15 @@ func (d *Display) Draw(screen *ebiten.Image) {
 	screen.Fill(color.Transparent)
 	// screen.Fill(d.bgCol)
 
+	w, h := text.Measure(d.text, d.face, d.spacing)
+	w = float64(d.width)
+	background := ebiten.NewImage(int(w), int(h))
+	bgOps := &ebiten.DrawImageOptions{}
+	bgOps.GeoM.Translate((float64(d.width)-w)/2, (float64(d.height)-h)/2)
+	bgOps.ColorScale.ScaleWithColor(d.bgCol)
+	background.Fill(d.bgCol)
+	screen.DrawImage(background, bgOps)
+
 	textOps := &text.DrawOptions{}
 	textOps.GeoM.Translate(float64(d.width)/2, float64(d.height)/2)
 	textOps.ColorScale.ScaleWithColor(d.fgCol)
@@ -66,9 +77,18 @@ func SetUpGui(c *config.Config) *Display {
 	d.bgCol = util.HexToRGBA(d.config.Display.BgColor)
 	d.fgCol = util.HexToRGBA(d.config.Display.FgColor)
 
+	d.spacing = 0
 	d.formatter = NewTextLyricFormatter(int(float64(d.width) * 0.8))
 
-	ff, _ := text.NewGoTextFaceSource(bytes.NewReader(fonts.MPlus1pRegular_ttf))
+	source := fonts.MPlus1pRegular_ttf
+	if util.FileExists(d.config.Display.Font) {
+		f, err := os.ReadFile(d.config.Display.Font)
+		if err == nil {
+			source = f
+		}
+	}
+
+	ff, _ := text.NewGoTextFaceSource(bytes.NewReader(source))
 
 	d.face = &text.GoTextFace{
 		Source: ff,
@@ -94,7 +114,7 @@ func RunGui(d *Display) error {
 }
 
 func (d *Display) UpdateText(lyric string) {
-	s, _ := text.Measure(lyric, d.face, 0)
+	s, _ := text.Measure(lyric, d.face, float64(d.spacing))
 	size := int(s)
 
 	if size <= d.formatter.MaxWidth {
