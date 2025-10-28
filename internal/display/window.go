@@ -43,15 +43,17 @@ func (d *Display) Draw(screen *ebiten.Image) {
 	screen.Fill(color.Transparent)
 	// screen.Fill(d.bgCol)
 
-	w, h := text.Measure(d.text, d.face, d.spacing)
-	h = h * float64(len(strings.Split(d.text, "\n")))
-	w = float64(d.width)
-	background := ebiten.NewImage(int(w), int(h))
-	bgOps := &ebiten.DrawImageOptions{}
-	bgOps.GeoM.Translate((float64(d.width)-w)/2, (float64(d.height)-h)/2)
-	bgOps.ColorScale.ScaleWithColor(d.bgCol)
-	background.Fill(d.bgCol)
-	screen.DrawImage(background, bgOps)
+	if d.text != "" {
+		w, h := text.Measure(d.text, d.face, d.spacing)
+		h = h * float64(len(strings.Split(d.text, "\n")))
+		w = float64(d.width)
+		background := ebiten.NewImage(int(w), int(h))
+		bgOps := &ebiten.DrawImageOptions{}
+		bgOps.GeoM.Translate((float64(d.width)-w)/2, (float64(d.height)-h)/2)
+		bgOps.ColorScale.ScaleWithColor(d.bgCol)
+		background.Fill(d.bgCol)
+		screen.DrawImage(background, bgOps)
+	}
 
 	textOps := &text.DrawOptions{}
 	textOps.GeoM.Translate(float64(d.width)/2, float64(d.height)/2)
