@@ -44,6 +44,7 @@ func (d *Display) Draw(screen *ebiten.Image) {
 	// screen.Fill(d.bgCol)
 
 	w, h := text.Measure(d.text, d.face, d.spacing)
+	h = h * float64(len(strings.Split(d.text, "\n")))
 	w = float64(d.width)
 	background := ebiten.NewImage(int(w), int(h))
 	bgOps := &ebiten.DrawImageOptions{}
