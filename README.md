@@ -1,3 +1,9 @@
+### **Note**:
+The project’s still alive. I haven't had a lot of time but I’ve been reworking a some of stuff locally and adding some new features. An update’s coming soon with plenty of cool new things.
+
+---
+
+
 ## What?
 A simple Go script that downloads, checks and displays the synced lyrics for the song currently playing using MPRIS.
 
