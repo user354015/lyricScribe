@@ -1,0 +1,39 @@
+[general]
+program_name = "LyricScribe"
+check_for_updates = true
+
+# Available modes: window (default), display, debug
+# program_mode = "window"
+program_mode = "display"
+# program_mode = "debug"
+# Available modes: silent (default), display
+logging = "silent"
+
+[search]
+depth = "both" # Available modes: match, search, both, local
+
+[player]
+# Any string contained in the name of the player suffices:
+player = "tauon"
+# player = "vivaldi"
+# player = "instance"
+# player = "chromium"
+# player = "mpv"
+
+# In seconds:
+position_offset = -0.52
+step = 0.3
+silence_timeout = 3
+
+[display]
+foreground = "#ffffff"
+background = "#000000"
+font = "/usr/share/fonts/TTF/IosevkaTermSlabNerdFontPropo-Regular.ttf"
+# font = "/usr/share/fonts/TTF/JetBrainsMono-Regular.ttf"
+font_size = 24
+
+window_width = 1100
+window_height = 250
+
+window_x = 410
+window_y = 0
